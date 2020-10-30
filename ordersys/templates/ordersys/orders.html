@@ -1,0 +1,9 @@
+{% extends 'ordersys/base.html'%}
+
+{% block content %}
+    {% if orders_list %}
+        {% for order in orders_list %}
+            <p>{{order}} {{order.ordered_items}}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
