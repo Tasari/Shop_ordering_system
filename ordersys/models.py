@@ -19,6 +19,12 @@ class Order(models.Model):
     date_ordered = models.DateTimeField("Ordered", auto_now=True)
     status = models.CharField(max_length=12)
 
+    def ordered_items_products_amounts(self):
+        end = ''
+        for item in ProductAmount.objects.filter(order=self):
+            end += '{}: {}, '.format(item.product.name, item.amount_of_product)
+        return end[:-2]
+
     def __str__(self):
         return str(self.id)[1:]
     
@@ -30,4 +36,4 @@ class IngredientAmount(models.Model):
 class ProductAmount(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    amount_of_ingredient = models.PositiveIntegerField()
+    amount_of_product = models.PositiveIntegerField()

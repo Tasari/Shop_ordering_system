@@ -3,7 +3,7 @@
 {% block content %}
     {% if orders_list %}
         {% for order in orders_list %}
-            <p>{{order}} {{order.ordered_items}}</p>
+            <p>{{order}} {{order.ordered_items_products_amounts}}</p>
         {% endfor %}
     {% endif %}
 {% endblock %}
