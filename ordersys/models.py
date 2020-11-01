@@ -33,7 +33,13 @@ class IngredientAmount(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount_of_ingredient = models.PositiveIntegerField()
 
+    def __str__(self):
+        return "Product: {}, Ingredient: {}".format(self.product, self.ingredient)
+
 class ProductAmount(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount_of_product = models.PositiveIntegerField()
+
+    def __str__(self):
+        return "Order: {}, Product: {}".format(self.order, self.product)
