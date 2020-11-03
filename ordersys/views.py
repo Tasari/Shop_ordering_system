@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 from .models import Order
@@ -36,4 +37,20 @@ class CustomersOrdersView(OrdersView):
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
     
-    
+def start_preparing_order(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    order.status = "Prepare"
+    order.save()
+    return HttpResponseRedirect(reverse('ordersys:pending'))
+
+def finish_preparing_order(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    order.status = "Collect"
+    order.save()
+    return HttpResponseRedirect(reverse('ordersys:prepare'))
+
+def collected_order(request, pk):
+    order = get_object_or_404(Order, id=pk)
+    order.status = "Done"
+    order.save()
+    return HttpResponseRedirect(reverse('ordersys:collect'))

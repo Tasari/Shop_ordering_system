@@ -4,15 +4,24 @@
     {% if orders_list %}
         {% for order in orders_list %}
             {% if order.status == "Pending" %}
-                <p type="button" class="btn btn-warning d-flex justify-content-center">{{order}}: {{order.ordered_items_products_amounts}}</p>
+                <form action="{% url 'ordersys:start_preparing' order.id%}" method="post" class="d-flex justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning w-100 d-flex mt-2 justify-content-center">{{order}}: {{order.ordered_items_products_amounts}}</button>
+                </form>
             {% elif order.status == "Prepare" %}
-                <p type="button" class="btn btn-primary d-flex justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
+                <form action="{% url 'ordersys:finish_preparing' order.id%}" method="post" class="d-flex justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary w-100 d-flex mt-2 justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</button>
+                </form>
             {% elif order.status == "Collect" %}
-                <p type="button" class="btn btn-success d-flex justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
+                <form action="{% url 'ordersys:collect_preparing' order.id%}" method="post" class="d-flex justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success w-100 d-flex mt-2 justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</button>
+                </form>
             {% elif order.status == "Done" %}
-                <p type="button" class="btn btn-dark d-flex justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
+                <p type="button" class="btn btn-dark d-flex justify-content-center mt-2 mb-0 text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
             {% else %}
-                <p type="button" class="btn btn-danger d-flex justify-content-center text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
+                <p type="button" class="btn btn-danger d-flex justify-content-center mt-2 mb-0 text-light">{{order}}: {{order.ordered_items_products_amounts}}</p>
             {% endif %}
         {% endfor %}
     {% endif %}
