@@ -31,6 +31,10 @@ class DoneOrdersView(OrdersView):
     def get_queryset(self):
         return Order.objects.filter(status='Done').all()
 
+class FailedOrdersView(OrdersView):
+    def get_queryset(self):
+        return Order.objects.filter(status='Error').all()
+
 class CustomersOrdersView(OrdersView):
     template_name = 'ordersys/customers.html'
 

@@ -13,5 +13,6 @@ urlpatterns = [
     path('prepare/', views.PrepareOrdersView.as_view(), name='prepare'),
     path('collect/', views.CollectOrdersView.as_view(), name='collect'),
     path('done/', views.DoneOrdersView.as_view(), name='done'),
+    path('failed/', views.FailedOrdersView.as_view(), name='failed'),
     path('customers/', views.CustomersOrdersView.as_view(), name='customers'),
 ]
