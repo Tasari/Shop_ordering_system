@@ -4,37 +4,37 @@
         <title>Ordering System</title>     
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     </head>
-    <body class="bg-dark d-flex justify-content-center">
+    <body class="bg-dark pr-3 d-flex justify-content-center">
         <div class="wrapper w-100">
             {% if orders_list %}
                 <div class="row">
                     <div class="col">
+                        <div class="wrapper d-flex justify-content-center text-light">Your order is waiting to be taken</div>
                         {% for order in orders_list %}
                             {% if order.status == "Pending" %}
-                                <form action="{% url 'ordersys:start_preparing' order.id%}" method="post" class="d-flex justify-content-center">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-warning d-flex mt-2 mb-0 justify-content-center">{{order}}</button>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn active btn-warning mt-2 d-flex w-75 justify-content-center">{{order}}</button>
+                                </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="col">
+                        <div class="wrapper d-flex justify-content-center text-light">Your order is being prepared</div>
                         {% for order in orders_list %}
                             {% if order.status == "Prepare" %}
-                                <form action="{% url 'ordersys:finish_preparing' order.id%}" method="post" class="d-flex justify-content-center">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-primary d-flex mt-2 mb-0 w-50 justify-content-center text-light">{{order}}</button>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn active btn-primary mt-2 d-flex w-75 justify-content-center text-light">{{order}}</button>
+                                </div>
                             {% endif %}
                         {% endfor %}
                     </div>
                     <div class="col">
+                        <div class="wrapper d-flex justify-content-center text-light">Come to collect your order</div>
                         {% for order in orders_list %}
                             {% if order.status == "Collect" %}
-                                <form action="{% url 'ordersys:collect_preparing' order.id%}" method="post" class="d-flex justify-content-center">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-success  d-flex mt-2 mb-0 justify-content-center text-light">{{order}}</button>
-                                </form>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn active btn-success mt-2 d-flex w-75 justify-content-center text-light">{{order}}</button>
+                                </div>
                             {% endif %}
                         {% endfor %}
                     </div>
