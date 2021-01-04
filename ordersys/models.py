@@ -22,7 +22,7 @@ class Order(models.Model):
     def ordered_items_products_amounts(self):
         end = ''
         for item in ProductAmount.objects.filter(order=self):
-            end += '{}: {}, '.format(item.product.name, item.amount_of_product)
+            end += '\n{}: {}, '.format(item.product.name, item.amount_of_product)
         return end[:-2]
 
     def __str__(self):
