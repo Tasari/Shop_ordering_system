@@ -1,12 +1,11 @@
 {% extends 'ordersys/base.html'%}
 {% block content %}
 <form action="." method="POST">
-
     {% csrf_token %}
-    
-    <table>
-    
-    </table>
-    <button type="submit">SUBMIT</button>
+        {% for product in order.product %}
+            <label for="data">{{order.product}} {{order.amount}}</label>
+            <br>
+        {%endfor%}
+    <input type="submit" value="Create">
 </form>
 {% endblock %}

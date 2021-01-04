@@ -17,7 +17,7 @@ class Product(models.Model):
 class Order(models.Model):
     ordered_items = models.ManyToManyField(Product, through='ProductAmount')
     date_ordered = models.DateTimeField("Ordered", auto_now=True)
-    status = models.CharField(max_length=12)
+    status = models.CharField(max_length=12, default="Pending")
 
     def ordered_items_products_amounts(self):
         end = ''
@@ -44,12 +44,9 @@ class ProductAmount(models.Model):
     def __str__(self):
         return "Order: {}, Product: {}".format(self.order, self.product)
 
-class OrderCreateForm(forms.ModelForm):
-    class Meta:
-        model = Order
-        fields = '__all__'
-
 class ProductAmountForm(forms.ModelForm):
+    product = forms.ModelChoiceField(queryset=Product.objects.all().order_by('name'), required=False)
+    amount = forms.IntegerField()
     class Meta:
         model = ProductAmount
-        fields = '__all__'
+        fields = ('product', 'amount')
