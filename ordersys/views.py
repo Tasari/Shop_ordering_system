@@ -3,7 +3,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 # Create your views here.
 
-from .models import Order
+from .models import Order, OrderCreateForm, ProductAmountForm
 
 class OrdersView(generic.ListView):
     model=Order
@@ -40,7 +40,19 @@ class CustomersOrdersView(OrdersView):
 
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
+
+class CreateOrderView(generic.CreateView):
+    template_name = 'ordersys/create_order.html'
     
+    def get(self, request):
+        context = {'order': OrderCreateForm(), 'products': ProductAmountForm()}
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        order = OrderCreateForm(request.Post)
+        return render(request, self.template_name)
+
+
 def start_preparing_order(request, pk):
     order = get_object_or_404(Order, id=pk)
     order.status = "Prepare"

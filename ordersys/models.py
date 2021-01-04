@@ -1,5 +1,5 @@
 from django.db import models
-
+from django import forms
 class Ingredient(models.Model):
     name = models.CharField(max_length=32)
     amount_stored = models.PositiveIntegerField()
@@ -43,3 +43,13 @@ class ProductAmount(models.Model):
 
     def __str__(self):
         return "Order: {}, Product: {}".format(self.order, self.product)
+
+class OrderCreateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+class ProductAmountForm(forms.ModelForm):
+    class Meta:
+        model = ProductAmount
+        fields = '__all__'
