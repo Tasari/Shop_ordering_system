@@ -2,10 +2,11 @@
 {% block content %}
 <form action="." method="POST">
     {% csrf_token %}
-        {% for product in order.product %}
-            <label for="data">{{order.product}} {{order.amount}}</label>
-            <br>
-        {%endfor%}
-    <input type="submit" value="Create">
+        <label for="data">{{actual_item.product}} {{actual_item.amount}}</label>
+        <br>
+    <input type="button" value="Add to order">
+    <br>
+    {{order.print_order()}}
+    <input type="submit" value="Finish order">
 </form>
 {% endblock %}

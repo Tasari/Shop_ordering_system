@@ -45,8 +45,18 @@ class ProductAmount(models.Model):
         return "Order: {}, Product: {}".format(self.order, self.product)
 
 class ProductAmountForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all().order_by('name'), required=False)
-    amount = forms.IntegerField()
+    product = forms.ModelChoiceField(queryset=Product.objects.all())
+    amount = forms.IntegerField(required=False)
     class Meta:
         model = ProductAmount
         fields = ('product', 'amount')
+
+class TempOrderForm(forms.ModelForm):
+    items = []
+    amounts = []
+
+    def print_order(self):
+        order=''
+        for item, amount in zip(items, amount):
+            order += '{}: {}\n'.format(item, amount)
+        return order
