@@ -3,7 +3,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 # Create your views here.
 
-from .models import Order, ProductAmountForm, Product, ProductAmount, TempOrderForm
+from .models import Order, ProductAmountForm, Product, ProductAmount
 
 class OrdersView(generic.ListView):
     model=Order
@@ -47,7 +47,7 @@ class CreateOrderView(generic.CreateView):
 
     fields = ['product', 'amount']
     def get(self, request):
-        context = {'actual_item': ProductAmountForm(), 'order':TempOrderForm()}
+        context = {'all_items': [ProductAmountForm() for x in Product.objects.all()]}
         return render(request, self.template_name, context)
     
     def post(self, request):
@@ -56,15 +56,14 @@ class CreateOrderView(generic.CreateView):
             order = Order()
             order.save()
             order = Order.objects.all().last()
-            all_products = [Product.objects.get(name=x[1]).id for x in product_amount.fields['product'].iterator(product_amount.fields['product'])]
-            all_amounts = product_amount.fields['amount']
-            for product, amount in zip(all_products, all_amounts):
-                proamo = ProductAmount.objects.create(order=order, product=product, amount_of_product=1)
-                proamo.save()
-
-            product_amount.save()
+            all_products = []
+            product = product_amount.cleaned_data['product']
+            amount = product_amount.cleaned_data['amount']
+            if product == '-':
+                pass
+            proamo = ProductAmount.objects.create(order=order, product=product, amount_of_product=amount)
+            proamo.save()
         return HttpResponseRedirect(reverse('ordersys:create'))
-
 
 def start_preparing_order(request, pk):
     order = get_object_or_404(Order, id=pk)
