@@ -2,16 +2,27 @@
 {% block content %}
 <form action="." method="POST">
     {% csrf_token %}
-        <label for="data">{{item_amount.product}} {{item_amount.amount}}</label>
+        <label for="data">
+            {{item_amount.product}} {{item_amount.amount}}
+        </label>
         <br>
     <input type="submit" name="Add" value="Add item to order">
     <br>
     <br>
     {% for item in temp_ord %}
-        <label class="bg-warning">{{item.product}}: {{item.amount_of_product}}</label>
+        <label class="bg-warning">{{item.product}}: {{item.amount_of_product}}
+        </label>
         <br>
     {% endfor %}
     <br>
     <input type="submit" name="Finish" value="Finish order">
+    <br>
+    <br>
+        <label>
+            {{item_amount.to_delete}}
+        </label>
+        <input type="submit" name="Delete Item" value="Add item from order">
+    <br>
+    <input type="submit" name="Delete" value="Delete order">
 </form>
 {% endblock %}

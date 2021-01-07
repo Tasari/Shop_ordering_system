@@ -73,7 +73,12 @@ class CreateOrderView(generic.CreateView):
                 for temp_item in TempOrder.objects.all():
                     product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
                     product_amount.save()
-                    TempOrder.objects.all().delete()
+                TempOrder.objects.all().delete()
+            elif request.POST.get("Delete"):
+                TempOrder.objects.all().delete()
+            elif request.POST.get("Delete Item"):
+                product = product_amount.cleaned_data['to_delete']
+                TempOrder.objects.get(product=product).product.delete()
         return HttpResponseRedirect(reverse('ordersys:create'))
 
 def start_preparing_order(request, pk):

@@ -51,6 +51,9 @@ class TempOrder(models.Model):
 class ProductAmountForm(forms.ModelForm):
     product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label='None', required=False)
     amount = forms.IntegerField(required=False)
+    to_delete = forms.ModelChoiceField(queryset=TempOrder.objects.all(), empty_label='None', required=False)
     class Meta:
-        model = TempOrder
+        model = ProductAmount
         fields = ('product', 'amount')
+
+
