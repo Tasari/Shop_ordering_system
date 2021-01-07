@@ -56,9 +56,15 @@ class CreateOrderView(generic.CreateView):
             if request.POST.get("Add"):
                 product = product_amount.cleaned_data['product']
                 amount = product_amount.cleaned_data['amount']
-                if product != '-':
-                    order = TempOrder(product=product, amount_of_product=amount)
-                    order.save()
+                try:
+                    product_on_temp = TempOrder.objects.get(product=product)
+                    if product_on_temp:
+                        product_on_temp.amount_of_product += amount
+                        product_on_temp.save()
+                except:    
+                    if product != None and amount!=None:
+                        order = TempOrder(product=product, amount_of_product=amount)
+                        order.save()
 
             elif request.POST.get("Finish"):
                 order = Order()

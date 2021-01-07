@@ -49,7 +49,7 @@ class TempOrder(models.Model):
     amount_of_product = models.PositiveIntegerField()
 
 class ProductAmountForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label='-', required=False)
+    product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label='None', required=False)
     amount = forms.IntegerField(required=False)
     class Meta:
         model = TempOrder
