@@ -2,10 +2,16 @@
 {% block content %}
 <form action="." method="POST">
     {% csrf_token %}
-        {% for item in all_items %}
-            <label for="data">{{item.product}} {{item.amount}}</label>
+        <label for="data">{{item_amount.product}} {{item_amount.amount}}</label>
         <br>
-        {% endfor %}
-    <input type="submit" value="Finish order">
+    <input type="submit" name="Add" value="Add item to order">
+    <br>
+    <br>
+    {% for item in temp_ord %}
+        <label class="bg-warning">{{item.product}}: {{item.amount_of_product}}</label>
+        <br>
+    {% endfor %}
+    <br>
+    <input type="submit" name="Finish" value="Finish order">
 </form>
 {% endblock %}

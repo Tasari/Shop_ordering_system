@@ -44,9 +44,13 @@ class ProductAmount(models.Model):
     def __str__(self):
         return "Order: {}, Product: {}".format(self.order, self.product)
 
+class TempOrder(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    amount_of_product = models.PositiveIntegerField()
+
 class ProductAmountForm(forms.ModelForm):
     product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label='-', required=False)
     amount = forms.IntegerField(required=False)
     class Meta:
-        model = ProductAmount
+        model = TempOrder
         fields = ('product', 'amount')

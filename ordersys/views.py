@@ -3,7 +3,7 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 # Create your views here.
 
-from .models import Order, ProductAmountForm, Product, ProductAmount
+from .models import Order, ProductAmountForm, Product, ProductAmount, TempOrder
 
 class OrdersView(generic.ListView):
     model=Order
@@ -47,22 +47,27 @@ class CreateOrderView(generic.CreateView):
 
     fields = ['product', 'amount']
     def get(self, request):
-        context = {'all_items': [ProductAmountForm() for x in Product.objects.all()]}
+        context = {'item_amount': ProductAmountForm(), 'temp_ord': TempOrder.objects.all()}
         return render(request, self.template_name, context)
     
     def post(self, request):
         product_amount = ProductAmountForm(request.POST)
         if product_amount.is_valid():
-            order = Order()
-            order.save()
-            order = Order.objects.all().last()
-            all_products = []
-            product = product_amount.cleaned_data['product']
-            amount = product_amount.cleaned_data['amount']
-            if product == '-':
-                pass
-            proamo = ProductAmount.objects.create(order=order, product=product, amount_of_product=amount)
-            proamo.save()
+            if request.POST.get("Add"):
+                product = product_amount.cleaned_data['product']
+                amount = product_amount.cleaned_data['amount']
+                if product != '-':
+                    order = TempOrder(product=product, amount_of_product=amount)
+                    order.save()
+
+            elif request.POST.get("Finish"):
+                order = Order()
+                order.save()
+                order = Order.objects.last()
+                for temp_item in TempOrder.objects.all():
+                    product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
+                    product_amount.save()
+                    TempOrder.objects.all().delete()
         return HttpResponseRedirect(reverse('ordersys:create'))
 
 def start_preparing_order(request, pk):
