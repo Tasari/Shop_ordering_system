@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 # Create your views here.
 
 from .models import Order, Product, ProductAmount, TempOrder
-from .forms import ProductAmountForm
+from .forms import OrderCreationForm
 
 class OrdersView(generic.ListView):
     model=Order
@@ -44,15 +44,15 @@ class CustomersOrdersView(OrdersView):
 
 class CreateOrderView(generic.CreateView):
     template_name = 'ordersys/create_order.html'
-    model = ProductAmountForm
+    model = OrderCreationForm
 
     fields = ['product', 'amount']
     def get(self, request):
-        context = {'item_amount': ProductAmountForm(), 'temp_ord': TempOrder.objects.all()}
+        context = {'item_amount': OrderCreationForm(), 'temp_ord': TempOrder.objects.all()}
         return render(request, self.template_name, context)
     
     def post(self, request):
-        product_amount = ProductAmountForm(request.POST)
+        product_amount = OrderCreationForm(request.POST)
         if product_amount.is_valid():
             if request.POST.get("Add"):
                 product = product_amount.cleaned_data['product']
