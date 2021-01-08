@@ -3,7 +3,8 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 # Create your views here.
 
-from .models import Order, ProductAmountForm, Product, ProductAmount, TempOrder
+from .models import Order, Product, ProductAmount, TempOrder
+from .forms import ProductAmountForm
 
 class OrdersView(generic.ListView):
     model=Order
@@ -78,7 +79,7 @@ class CreateOrderView(generic.CreateView):
                 TempOrder.objects.all().delete()
             elif request.POST.get("Delete Item"):
                 product = product_amount.cleaned_data['to_delete']
-                TempOrder.objects.get(product=product).product.delete()
+                TempOrder.objects.get(product=product).delete()
         return HttpResponseRedirect(reverse('ordersys:create'))
 
 def start_preparing_order(request, pk):

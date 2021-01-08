@@ -1,5 +1,5 @@
 from django.db import models
-from django import forms
+
 class Ingredient(models.Model):
     name = models.CharField(max_length=32)
     amount_stored = models.PositiveIntegerField()
@@ -48,12 +48,5 @@ class TempOrder(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount_of_product = models.PositiveIntegerField()
 
-class ProductAmountForm(forms.ModelForm):
-    product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label='None', required=False)
-    amount = forms.IntegerField(required=False)
-    to_delete = forms.ModelChoiceField(queryset=TempOrder.objects.all(), empty_label='None', required=False)
-    class Meta:
-        model = ProductAmount
-        fields = ('product', 'amount')
 
 
