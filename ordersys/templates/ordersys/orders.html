@@ -6,25 +6,25 @@
             {% if order.status == "Pending" %}
                 <form action="{% url 'ordersys:start_preparing' order.id%}" method="post" class="d-flex justify-content-center">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-warning w-25 d-flex mt-2 mb-0 justify-content-center">{{order}}:{{order.ordered_items_products_amounts|linebreaks}}</button>
+                    <button type="submit" class="btn btn-warning w-25 d-flex mt-2 mb-0 justify-content-center">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
                 </form>
             {% elif order.status == "Prepare" %}
                 <form action="{% url 'ordersys:finish_preparing' order.id%}" method="post" class="d-flex justify-content-center">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.ordered_items_products_amounts|linebreaks}}</button>
+                    <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
                 </form>
             {% elif order.status == "Collect" %}
                 <form action="{% url 'ordersys:collect_preparing' order.id%}" method="post" class="d-flex justify-content-center">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.ordered_items_products_amounts|linebreaks}}</button>
+                    <button type="submit" class="btn btn-success w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
                 </form>
             {% elif order.status == "Done" %}
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-secondary w-25 d-flex justify-content-center mt-2 mb-0 text-light">{{order}}:{{order.ordered_items_products_amounts|linebreaks}}</p>
+                    <button type="submit" class="btn btn-secondary w-25 d-flex justify-content-center mt-2 mb-0 text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</p>
                 </div>
             {% else %}
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-danger d-flex w-25 justify-content-center mt-2 mb-0 text-light">{{order}}:{{order.ordered_items_products_amounts|linebreaks}}</p>
+                    <button type="submit" class="btn btn-danger d-flex w-25 justify-content-center mt-2 mb-0 text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</p>
                 </div>
             {% endif %}
         {% endfor %}

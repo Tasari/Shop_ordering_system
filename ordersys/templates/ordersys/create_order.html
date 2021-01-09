@@ -1,16 +1,17 @@
 {% extends 'ordersys/base.html'%}
 {% block content %}
-<form action="." method="POST">
+<form method="POST">
     {% csrf_token %}
-        <label for="data">
-            {{item_amount.product}} {{item_amount.amount}}
+        <label>
+            {{creation_form.product}} {{creation_form.amount}}
         </label>
         <br>
     <input type="submit" name="Add" value="Add item to order">
     <br>
     <br>
-    {% for item in temp_ord %}
-        <label class="bg-warning">{{item.product}}: {{item.amount_of_product}}
+    {% for item in temp_order %}
+        <label class="bg-warning">
+            {{item.product}}: {{item.amount_of_product}}
         </label>
         <br>
     {% endfor %}
@@ -19,7 +20,7 @@
     <br>
     <br>
         <label>
-            {{item_amount.to_delete}}
+            {{creation_form.to_delete}}
         </label>
         <input type="submit" name="Delete Item" value="Delete item from order">
     <br>

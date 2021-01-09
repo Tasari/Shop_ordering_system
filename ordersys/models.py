@@ -19,7 +19,7 @@ class Order(models.Model):
     date_ordered = models.DateTimeField("Ordered", auto_now=True)
     status = models.CharField(max_length=12, default="Pending")
 
-    def ordered_items_products_amounts(self):
+    def print_ordered_items_products_amounts(self):
         end = ''
         for item in ProductAmount.objects.filter(order=self):
             end += '\n{}: {}, '.format(item.product.name, item.amount_of_product)

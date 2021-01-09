@@ -47,25 +47,30 @@ class CreateOrderView(generic.CreateView):
     model = OrderCreationForm
 
     fields = ['product', 'amount']
+
     def get(self, request):
-        context = {'item_amount': OrderCreationForm(), 'temp_ord': TempOrder.objects.all()}
+        context = {
+            'creation_form': OrderCreationForm(), 
+            'temp_order': TempOrder.objects.all(),
+            }
         return render(request, self.template_name, context)
     
     def post(self, request):
-        product_amount = OrderCreationForm(request.POST)
-        if product_amount.is_valid():
+        order_creation_data = OrderCreationForm(request.POST)
+        if order_creation_data.is_valid():
+
             if request.POST.get("Add"):
-                product = product_amount.cleaned_data['product']
-                amount = product_amount.cleaned_data['amount']
+                product = order_creation_data.cleaned_data['product']
+                amount = order_creation_data.cleaned_data['amount']
                 try:
                     product_on_temp = TempOrder.objects.get(product=product)
                     if product_on_temp:
                         product_on_temp.amount_of_product += amount
                         product_on_temp.save()
                 except:    
-                    if product != None and amount!=None:
-                        order = TempOrder(product=product, amount_of_product=amount)
-                        order.save()
+                    if product != None and amount != None:
+                        temp_order = TempOrder(product=product, amount_of_product=amount)
+                        temp_order.save()
 
             elif request.POST.get("Finish"):
                 if TempOrder.objects.all():
@@ -76,11 +81,14 @@ class CreateOrderView(generic.CreateView):
                         product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
                         product_amount.save()
                     TempOrder.objects.all().delete()
+
             elif request.POST.get("Delete"):
                 TempOrder.objects.all().delete()
+
             elif request.POST.get("Delete Item"):
-                product = product_amount.cleaned_data['to_delete']
+                product = order_creation_data.cleaned_data['to_delete']
                 TempOrder.objects.get(product=product).delete()
+
         return HttpResponseRedirect(reverse('ordersys:create'))
 
 def start_preparing_order(request, pk):
