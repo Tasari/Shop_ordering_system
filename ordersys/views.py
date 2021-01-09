@@ -65,10 +65,11 @@ class CreateOrderView(generic.CreateView):
                 try:
                     product_on_temp = TempOrder.objects.get(product=product)
                     if product_on_temp:
-                        product_on_temp.amount_of_product += amount
-                        product_on_temp.save()
+                        if product_on_temp.amount_of_product + amount > 0:
+                            product_on_temp.amount_of_product += amount
+                            product_on_temp.save()
                 except:    
-                    if product != None and amount != None:
+                    if product != None and amount!= None and amount > 0:
                         temp_order = TempOrder(product=product, amount_of_product=amount)
                         temp_order.save()
 
@@ -87,7 +88,8 @@ class CreateOrderView(generic.CreateView):
 
             elif request.POST.get("Delete Item"):
                 product = order_creation_data.cleaned_data['to_delete']
-                TempOrder.objects.get(product=product).delete()
+                if product != None:
+                    TempOrder.objects.get(product=product).delete()
 
         return HttpResponseRedirect(reverse('ordersys:create'))
 
