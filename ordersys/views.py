@@ -68,13 +68,14 @@ class CreateOrderView(generic.CreateView):
                         order.save()
 
             elif request.POST.get("Finish"):
-                order = Order()
-                order.save()
-                order = Order.objects.last()
-                for temp_item in TempOrder.objects.all():
-                    product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
-                    product_amount.save()
-                TempOrder.objects.all().delete()
+                if TempOrder.objects.all():
+                    order = Order()
+                    order.save()
+                    order = Order.objects.last()
+                    for temp_item in TempOrder.objects.all():
+                        product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
+                        product_amount.save()
+                    TempOrder.objects.all().delete()
             elif request.POST.get("Delete"):
                 TempOrder.objects.all().delete()
             elif request.POST.get("Delete Item"):
