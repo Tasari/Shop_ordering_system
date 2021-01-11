@@ -43,7 +43,7 @@ class CustomersOrdersView(OrdersView):
         return Order.objects.exclude(status='Done').all()
 
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
-    login_url = '/login/'
+    login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'
     model = OrderCreationForm
 
