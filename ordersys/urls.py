@@ -1,5 +1,6 @@
 from django.urls import path
 
+from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = 'ordersys'
@@ -15,5 +16,6 @@ urlpatterns = [
     path('orders/done/', views.DoneOrdersView.as_view(), name='done'),
     path('orders/failed/', views.FailedOrdersView.as_view(), name='failed'),
     path('orders/customers/', views.CustomersOrdersView.as_view(), name='customers'),
-    path('orders/create/', views.CreateOrderView.as_view(), name='create')
+    path('orders/create/', views.CreateOrderView.as_view(), name='create'),
+    path('login/', auth_views.LoginView.as_view(template_name='ordersys/login.html'))
 ]
