@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.http import HttpResponseRedirect
-# Create your views here.
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Order, Product, ProductAmount, TempOrder
 from .forms import OrderCreationForm
@@ -42,7 +42,8 @@ class CustomersOrdersView(OrdersView):
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
 
-class CreateOrderView(generic.CreateView):
+class CreateOrderView(LoginRequiredMixin, generic.CreateView):
+    login_url = '/login/'
     template_name = 'ordersys/create_order.html'
     model = OrderCreationForm
 
