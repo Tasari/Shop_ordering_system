@@ -11,7 +11,8 @@ from django.utils.http import is_safe_url
 from .models import Order, Product, ProductAmount, TempOrder
 from .forms import OrderCreationForm, LogInForm
 
-class OrdersView(generic.ListView):
+class OrdersView(LoginRequiredMixin, generic.ListView):
+    login_url = '/ordersys/login/'
     model=Order
     template_name = 'ordersys/orders.html'
     context_object_name = 'orders_list'
@@ -41,8 +42,12 @@ class FailedOrdersView(OrdersView):
     def get_queryset(self):
         return Order.objects.filter(status='Error').all()
 
-class CustomersOrdersView(OrdersView):
+class CustomersOrdersView(generic.ListView):
+    login_url = '/ordersys/login/'
+    model=Order    
     template_name = 'ordersys/customers.html'
+    context_object_name = 'orders_list'
+    orderint = ['id']
 
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
@@ -54,7 +59,7 @@ class LogView(auth_views.LoginView):
     fields = ['username', 'password']
     def get(self, request):
         context = {
-            'form': LogInForm(),
+            'login_form': LogInForm(),
         }
         return render(request, self.template_name, context)
 
