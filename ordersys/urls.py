@@ -15,5 +15,6 @@ urlpatterns = [
     path('orders/done/', views.DoneOrdersView.as_view(), name='done'),
     path('orders/failed/', views.FailedOrdersView.as_view(), name='failed'),
     path('orders/customers/', views.CustomersOrdersView.as_view(), name='customers'),
-    path('orders/create/', views.CreateOrderView.as_view(), name='create')
+    path('orders/create/', views.CreateOrderView.as_view(), name='create'),
+    path('login/', views.LogView.as_view(), name='login'),
 ]
