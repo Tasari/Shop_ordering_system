@@ -11,9 +11,9 @@ class OrderCreationForm(forms.ModelForm):
         model = ProductAmount
         fields = ('product', 'amount')
 
-class LogInForm(forms.ModelForm):
+class LogInForm(forms.Form):
     username = forms.CharField()
-    password = forms.PasswordInput()
+    password = forms.CharField(widget = forms.PasswordInput())
     class Meta:
         model = User
         fields = ('username', 'password')
