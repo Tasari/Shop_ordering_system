@@ -65,8 +65,7 @@ class LogView(auth_views.LoginView):
 
     def post(self, request):
         login_data = LogInForm(request.POST)
-        if login_data.is_valid():
-            
+        if login_data.is_valid():    
             username = login_data.cleaned_data['username']
             password = login_data.cleaned_data['password']
             user = authenticate(username=username, password=password)
@@ -97,40 +96,44 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     def post(self, request):
         order_creation_data = OrderCreationForm(request.POST)
         if order_creation_data.is_valid():
-
             if request.POST.get("Add"):
-                product = order_creation_data.cleaned_data['product']
-                amount = order_creation_data.cleaned_data['amount']
-                try:
-                    product_on_temp = TempOrder.objects.get(product=product)
-                    if product_on_temp:
-                        if product_on_temp.amount_of_product + amount > 0:
-                            product_on_temp.amount_of_product += amount
-                            product_on_temp.save()
-                except:    
-                    if product != None and amount!= None and amount > 0:
-                        temp_order = TempOrder(product=product, amount_of_product=amount)
-                        temp_order.save()
-
+                self.add_to_order(order_creation_data)
             elif request.POST.get("Finish"):
-                if TempOrder.objects.all():
-                    order = Order()
-                    order.save()
-                    order = Order.objects.last()
-                    for temp_item in TempOrder.objects.all():
-                        product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
-                        product_amount.save()
-                    TempOrder.objects.all().delete()
-
+                self.finish_order()
             elif request.POST.get("Delete"):
                 TempOrder.objects.all().delete()
-
             elif request.POST.get("Delete Item"):
-                product = order_creation_data.cleaned_data['to_delete']
-                if product != None:
-                    TempOrder.objects.get(product=product).delete()
-
+                self.delete_from_order(order_creation_data)
         return HttpResponseRedirect(reverse('ordersys:create'))
+
+    def add_to_order(self, order_creation_data):
+        product = order_creation_data.cleaned_data['product']
+        amount = order_creation_data.cleaned_data['amount']
+        try:
+            product_on_temp = TempOrder.objects.get(product=product)
+            if product_on_temp:
+                if product_on_temp.amount_of_product + amount > 0:
+                    product_on_temp.amount_of_product += amount
+                    product_on_temp.save()
+        except:    
+            if product != None and amount!= None and amount > 0:
+                temp_order = TempOrder(product=product, amount_of_product=amount)
+                temp_order.save()
+
+    def finish_order(self):
+        if TempOrder.objects.all():
+            order = Order()
+            order.save()
+            order = Order.objects.last()
+            for temp_item in TempOrder.objects.all():
+                product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
+                product_amount.save()
+            TempOrder.objects.all().delete()
+    
+    def delete_from_order(self, order_creation_data):
+        product = order_creation_data.cleaned_data['to_delete']
+        if product != None:
+            TempOrder.objects.get(product=product).delete()
 
 def start_preparing_order(request, pk):
     order = get_object_or_404(Order, id=pk)
