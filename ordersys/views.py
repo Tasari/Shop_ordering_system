@@ -75,7 +75,7 @@ class LogView(auth_views.LoginView):
                 if is_safe_url(url=redirect, allowed_hosts=settings.ALLOWED_HOSTS):
                     return HttpResponseRedirect(redirect)
                 else:
-                    return cHttpResponseRedirect(reverse('ordersys:customers'))
+                    return HttpResponseRedirect(reverse('ordersys:customers'))
             else:
                 return HttpResponseRedirect(reverse('ordersys:login'))
 
@@ -96,19 +96,20 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     def post(self, request):
         order_creation_data = OrderCreationForm(request.POST)
         if order_creation_data.is_valid():
+            product = order_creation_data.cleaned_data['product']
+            amount = order_creation_data.cleaned_data['amount']
+            deletion = order_creation_data.cleaned_data['to_delete']
             if request.POST.get("Add"):
-                self.add_to_order(order_creation_data)
+                self.add_to_order(product, amount)
             elif request.POST.get("Finish"):
                 self.finish_order()
             elif request.POST.get("Delete"):
                 TempOrder.objects.all().delete()
             elif request.POST.get("Delete Item"):
-                self.delete_from_order(order_creation_data)
+                self.delete_from_order(deletion)
         return HttpResponseRedirect(reverse('ordersys:create'))
 
-    def add_to_order(self, order_creation_data):
-        product = order_creation_data.cleaned_data['product']
-        amount = order_creation_data.cleaned_data['amount']
+    def add_to_order(self, product, amount):
         try:
             product_on_temp = TempOrder.objects.get(product=product)
             if product_on_temp:
@@ -117,7 +118,10 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
                     product_on_temp.save()
         except:    
             if product != None and amount!= None and amount > 0:
-                temp_order = TempOrder(product=product, amount_of_product=amount)
+                temp_order = TempOrder(
+                    product=product, 
+                    amount_of_product=amount
+                    )
                 temp_order.save()
 
     def finish_order(self):
@@ -126,14 +130,17 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             order.save()
             order = Order.objects.last()
             for temp_item in TempOrder.objects.all():
-                product_amount = ProductAmount(order=order, product=temp_item.product, amount_of_product=temp_item.amount_of_product)
+                product_amount = ProductAmount(
+                    order=order, 
+                    product=temp_item.product, 
+                    amount_of_product=temp_item.amount_of_product
+                    )
                 product_amount.save()
             TempOrder.objects.all().delete()
     
-    def delete_from_order(self, order_creation_data):
-        product = order_creation_data.cleaned_data['to_delete']
-        if product != None:
-            TempOrder.objects.get(product=product).delete()
+    def delete_from_order(self, to_delete):
+        if to_delete != None:
+            TempOrder.objects.get(product=to_delete).delete()
 
 def start_preparing_order(request, pk):
     order = get_object_or_404(Order, id=pk)
