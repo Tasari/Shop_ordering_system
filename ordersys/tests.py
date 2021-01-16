@@ -10,8 +10,9 @@ class TestOrderCreationView(TestCase):
         user.set_password('12345')
         user.save()
         product = Product(name='Test')
-        product2 =Product(name='Test2')
+        product2 = Product(name='Test2')
         product.save()
+        product2.save()
         self.c = Client()
         response = self.c.post(reverse('ordersys:login'), {'username':'test', 'password':'12345'}, follow=True)
     
@@ -30,6 +31,16 @@ class TestOrderCreationView(TestCase):
         response = self.c.post(reverse('ordersys:create'), {'product':product.id, 'amount':amount2, 'Add':True})
         response = self.c.get(reverse('ordersys:create'))
         self.assertContains(response, "{}: {}".format(product.name, amount+amount2))
+
+    def test_adding_two_products(self):
+        product = Product.objects.get(id=1)
+        product2 = Product.objects.get(id=2)
+        amount = 3
+        response = self.c.post(reverse('ordersys:create'), {'product':product.id, 'amount':amount, 'Add':True})
+        response = self.c.post(reverse('ordersys:create'), {'product':product2.id, 'amount':amount, 'Add':True})
+        response = self.c.get(reverse('ordersys:create'))
+        self.assertContains(response, "{}: {}".format(product.name, amount))
+        self.assertContains(response, "{}: {}".format(product2.name, amount))
 
     def test_adding_negative_product_amount(self):
         product = Product.objects.last()
@@ -63,3 +74,25 @@ class TestOrderCreationView(TestCase):
         response = self.c.post(reverse('ordersys:create'), {'to_delete':product.id, 'Delete Item':True})
         response = self.c.get(reverse('ordersys:create'))
         self.assertNotContains(response, "{}: {}".format(product.name, amount))
+
+    def test_deleting_order(self):
+        product = Product.objects.get(id=1)
+        product2 = Product.objects.get(id=2)
+        amount = 3
+        response = self.c.post(reverse('ordersys:create'), {'product':product.id, 'amount':amount, 'Add':True})
+        response = self.c.post(reverse('ordersys:create'), {'product':product2.id, 'amount':amount, 'Add':True})
+        response = self.c.post(reverse('ordersys:create'), {'Delete':True})
+        response = self.c.get(reverse('ordersys:create'))
+        self.assertNotContains(response, "{}: {}".format(product.name, amount))
+        self.assertNotContains(response, "{}: {}".format(product2.name, amount))
+    
+    def test_finishing_order(self):
+        product = Product.objects.get(id=1)
+        product2 = Product.objects.get(id=2)
+        amount = 3
+        response = self.c.post(reverse('ordersys:create'), {'product':product.id, 'amount':amount, 'Add':True})
+        response = self.c.post(reverse('ordersys:create'), {'product':product2.id, 'amount':amount, 'Add':True})
+        response = self.c.post(reverse('ordersys:create'), {'Finish':True})
+        response = self.c.get(reverse('ordersys:index'))
+        self.assertContains(response, "{}: {}".format(product.name, amount))
+        self.assertContains(response, "{}: {}".format(product2.name, amount))
