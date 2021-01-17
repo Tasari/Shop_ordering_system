@@ -1,0 +1,19 @@
+{% extends 'ordersys/base.html'%}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" name="Daily" value="Print Daily Report">
+    <br>
+    <input type="submit" name="Monthly" value="Print Monthly Report">
+    <br>
+    <input type="submit" name="Annual" value="Print Annual Report">
+    <br>
+    <input type="submit" name="Workers" value="Manage Workers">
+    <br>
+    <input type="submit" name="Orders" value="Manage Orders">
+    <br>
+    <input type="submit" name="Stock" value="Manage items in stock">
+    <br>
+
+</form>
+{% endblock %}

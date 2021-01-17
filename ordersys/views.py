@@ -79,6 +79,26 @@ class LogView(auth_views.LoginView):
             else:
                 return HttpResponseRedirect(reverse('ordersys:login'))
 
+class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
+    login_url = '/ordersys/login/'
+    template_name = 'ordersys/manager_tab.html'
+    
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        if request.POST.get("Daily"):
+            return render(request, 'ordersys/daily_report.html')
+        if request.POST.get("Monthly"):
+            return render(request, 'ordersys/monthly_report.html')
+        if request.POST.get("Annual"):
+            return render(request, 'ordersys/annual_report.html')
+        if request.POST.get("Workers"):
+            return render(request, 'ordersys/manage_workers.html')
+        if request.POST.get("Orders"):
+            return render(request, 'ordersys/manage_orders.html')   
+        if request.POST.get("Stock"):
+            return render(request, 'ordersys/manage_stock.html')         
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'
