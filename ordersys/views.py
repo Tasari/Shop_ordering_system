@@ -87,18 +87,23 @@ class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
         return render(request, self.template_name)
 
     def post(self, request):
-        if request.POST.get("Daily"):
-            return render(request, 'ordersys/daily_report.html')
-        if request.POST.get("Monthly"):
-            return render(request, 'ordersys/monthly_report.html')
-        if request.POST.get("Annual"):
-            return render(request, 'ordersys/annual_report.html')
+        if request.POST.get("Report"):
+            return HttpResponseRedirect(reverse('ordersys:manage_reports'))
         if request.POST.get("Workers"):
-            return render(request, 'ordersys/manage_workers.html')
+            return HttpResponseRedirect(reverse('ordersys:manage_workers'))
         if request.POST.get("Orders"):
-            return render(request, 'ordersys/manage_orders.html')   
+            return HttpResponseRedirect(reverse('ordersys:manage_orders')) 
         if request.POST.get("Stock"):
-            return render(request, 'ordersys/manage_stock.html')         
+            return HttpResponseRedirect(reverse('ordersys:manage_stock'))
+
+class ManageOrdersView(LoginRequiredMixin, generic.ListView):
+    login_url = '/ordersys/login/' 
+    template_name = 'ordersys/manage_orders.html'
+    model = Order
+    context_object_name = 'orders_list'
+
+    def get_queryset(self):
+        return Order.objects.order_by('-date_ordered')
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'

@@ -17,6 +17,7 @@ urlpatterns = [
     path('orders/customers/', views.CustomersOrdersView.as_view(), name='customers'),
     path('orders/create/', views.CreateOrderView.as_view(), name='create'),
     path('login/', views.LogView.as_view(), name='login'),
-    path('managers/', views.ManagerMenuView.as_view(), name='manager_tab')
+    path('managers/', views.ManagerMenuView.as_view(), name='manager_tab'),
+    path('manage_orders/', views.ManageOrdersView.as_view(), name='manage_orders'),
 
 ]
