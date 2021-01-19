@@ -19,5 +19,6 @@ urlpatterns = [
     path('login/', views.LogView.as_view(), name='login'),
     path('managers/', views.ManagerMenuView.as_view(), name='manager_tab'),
     path('manage_orders/', views.ManageOrdersView.as_view(), name='manage_orders'),
+    path('manage_order/<int:pk>', views.OrderDetailsView.as_view(), name='order_details'),
 
 ]

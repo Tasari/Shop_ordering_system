@@ -1,1 +1,29 @@
-{% extends 'ordersys/orders.html'%}
+{% extends 'ordersys/base.html'%}
+
+{% block content %}
+    {% if orders_list %}
+        {% for order in orders_list %}
+            {% if order.status == "Pending" %}
+                <form action="{% url 'ordersys:order_details' order.id%}" method="get" class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-warning w-25 d-flex mt-2 mb-0 justify-content-center">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
+                </form>
+            {% elif order.status == "Prepare" %}
+                <form action="{% url 'ordersys:order_details' order.id%}" method="get" class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
+                </form>
+            {% elif order.status == "Collect" %}
+                <form action="{% url 'ordersys:order_details' order.id%}" method="get" class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success w-25 d-flex mt-2 mb-0 justify-content-center text-light">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
+                </form>
+            {% elif order.status == "Done" %}
+                <form action="{% url 'ordersys:order_details' order.id%}" method="get" class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-secondary w-25 d-flex mt-2 mb-0 justify-content-center">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
+                </form>
+            {% else %}
+                <form action="{% url 'ordersys:order_details' order.id%}" method="get" class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-danger w-25 d-flex mt-2 mb-0 justify-content-center">{{order}}:{{order.print_ordered_items_products_amounts|linebreaks}}</button>
+                </form>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

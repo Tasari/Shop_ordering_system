@@ -52,6 +52,11 @@ class CustomersOrdersView(generic.ListView):
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
 
+class OrderDetailsView(generic.DetailView):
+    model = Order
+    template_name = 'ordersys/order_details.html'
+
+
 class LogView(auth_views.LoginView):
     template_name = 'ordersys/login.html'
     model = LogInForm
