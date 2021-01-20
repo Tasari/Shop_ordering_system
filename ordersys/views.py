@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.http import is_safe_url
 
 from .models import Order, Product, ProductAmount, TempOrder
-from .forms import OrderCreationForm, LogInForm
+from .forms import OrderCreationForm, LogInForm, EditForm
 
 class OrdersView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/'
@@ -56,7 +56,19 @@ class OrderDetailsView(generic.DetailView):
     model = Order
     template_name = 'ordersys/order_details.html'
 
-
+class OrderUpdateView(generic.edit.UpdateView):
+    model = Order
+    template_name='ordersys/edit_order.html'
+    fields = ['status']
+    
+    def post(self, request, pk):
+        order_data = EditForm(request.POST)
+        order = get_object_or_404(Order, pk=pk)
+        if order_data.is_valid():    
+            status = order_data.cleaned_data['status']
+            order.status = status
+            order.save()
+        return HttpResponseRedirect(reverse('ordersys:order_details', args=[pk]))
 class LogView(auth_views.LoginView):
     template_name = 'ordersys/login.html'
     model = LogInForm
