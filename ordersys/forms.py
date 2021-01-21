@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Product, TempOrder, ProductAmount
+from .models import Product, TempOrder, ProductAmount, Order
 
 class OrderCreationForm(forms.ModelForm):
     product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label=None, required=False)
@@ -17,3 +17,9 @@ class LogInForm(forms.Form):
     class Meta:
         model = User
         fields = ('username', 'password')
+
+class EditForm(forms.Form):
+    status = forms.CharField()
+    class Meta:
+        model = Order
+        fields = ('status')

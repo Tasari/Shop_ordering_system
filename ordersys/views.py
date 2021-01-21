@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.http import is_safe_url
 
 from .models import Order, Product, ProductAmount, TempOrder
-from .forms import OrderCreationForm, LogInForm
+from .forms import OrderCreationForm, LogInForm, EditForm
 
 class OrdersView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/'
@@ -52,6 +52,23 @@ class CustomersOrdersView(generic.ListView):
     def get_queryset(self):
         return Order.objects.exclude(status='Done').all()
 
+class OrderDetailsView(generic.DetailView):
+    model = Order
+    template_name = 'ordersys/order_details.html'
+
+class OrderUpdateView(generic.edit.UpdateView):
+    model = Order
+    template_name='ordersys/edit_order.html'
+    fields = ['status']
+    
+    def post(self, request, pk):
+        order_data = EditForm(request.POST)
+        order = get_object_or_404(Order, pk=pk)
+        if order_data.is_valid():    
+            status = order_data.cleaned_data['status']
+            order.status = status
+            order.save()
+        return HttpResponseRedirect(reverse('ordersys:order_details', args=[pk]))
 class LogView(auth_views.LoginView):
     template_name = 'ordersys/login.html'
     model = LogInForm
@@ -79,6 +96,31 @@ class LogView(auth_views.LoginView):
             else:
                 return HttpResponseRedirect(reverse('ordersys:login'))
 
+class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
+    login_url = '/ordersys/login/'
+    template_name = 'ordersys/manager_tab.html'
+    
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        if request.POST.get("Report"):
+            return HttpResponseRedirect(reverse('ordersys:manage_reports'))
+        if request.POST.get("Workers"):
+            return HttpResponseRedirect(reverse('ordersys:manage_workers'))
+        if request.POST.get("Orders"):
+            return HttpResponseRedirect(reverse('ordersys:manage_orders')) 
+        if request.POST.get("Stock"):
+            return HttpResponseRedirect(reverse('ordersys:manage_stock'))
+
+class ManageOrdersView(LoginRequiredMixin, generic.ListView):
+    login_url = '/ordersys/login/' 
+    template_name = 'ordersys/manage_orders.html'
+    model = Order
+    context_object_name = 'orders_list'
+
+    def get_queryset(self):
+        return Order.objects.order_by('-date_ordered')
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'

@@ -25,8 +25,22 @@ class Order(models.Model):
             end += '\n{}: {}, '.format(item.product.name, item.amount_of_product)
         return end[:-2]
 
+    def define_shown_id(self):
+        if self.id<10:
+            return '00{}'.format(self.id)
+        elif self.id<100:
+            return '0{}'.format(self.id)
+        elif self.id<1000:
+            return str(self.id)
+        else:
+            return str(self.id)[-3:]
+        
+    def __repr__(self):
+        return self.id
+
     def __str__(self):
-        return str(self.id)[1:]
+        return self.define_shown_id()
+
     
 class IngredientAmount(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
