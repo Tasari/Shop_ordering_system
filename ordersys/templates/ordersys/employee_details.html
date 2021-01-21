@@ -1,8 +1,15 @@
 {% extends "ordersys/base.html" %}
 
 {% block content %}
-    <h1>User No. {{user.id}}:{{user.login}}</h1>
+    <h1>{{employee.first_name}} {{employee.last_name}}</h1>
+    <p>
+        Position: {{employee.position}}<br>
+        Hourly rate: {{employee.hourly_rate}}<br>
+        Minimum salary: {{employee.minimum_salary}}
+    </p>
+    <p>Employed: {{employee.employment_date}}</p>
+
     <form action="{% url 'ordersys:edit_employee' user.id%}" method="get">
-        <button type="submit">Edit Order</button>
+        <button type="submit">Edit Employee</button>
     </form>
 {% endblock %}

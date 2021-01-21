@@ -4,12 +4,11 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.http import is_safe_url
 
-from .models import Order, Product, ProductAmount, TempOrder
+from .models import *
 from .forms import OrderCreationForm, LogInForm, EditForm
 
 class OrdersView(LoginRequiredMixin, generic.ListView):
@@ -126,18 +125,18 @@ class ManageOrdersView(LoginRequiredMixin, generic.ListView):
 class ManageEmployeesView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/' 
     template_name = 'ordersys/manage_employees.html'
-    model = User
+    model = Employee
     context_object_name = 'employees_list'
 
     def get_queryset(self):
-        return User.objects.order_by('id')
+        return Employee.objects.order_by('id')
 
 class EmployeeDetailsView(generic.DetailView):
-    model = User
+    model = Employee
     template_name = 'ordersys/employee_details.html'
 
 class EmployeeUpdateView(generic.edit.UpdateView):
-    model = User
+    model = Employee
     template_name='ordersys/edit_employee.html'
     fields = ['name']
 

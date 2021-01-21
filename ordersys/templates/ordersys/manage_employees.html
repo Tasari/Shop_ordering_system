@@ -4,7 +4,7 @@
     {% if employees_list %}
         {% for employee in employees_list %}
             <form action="{% url 'ordersys:employee_details' employee.id%}" method="get" class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center">{{employee.id}}: {{employee.login}}</button>
+                <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center">{{employee.id}}: {{employee.first_name}} {{employee.last_name}}</button>
             </form>
         {% endfor %}
     {% endif %}
