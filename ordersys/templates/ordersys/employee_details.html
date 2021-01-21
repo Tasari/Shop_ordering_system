@@ -1,0 +1,8 @@
+{% extends "ordersys/base.html" %}
+
+{% block content %}
+    <h1>User No. {{user.id}}:{{user.login}}</h1>
+    <form action="{% url 'ordersys:edit_employee' user.id%}" method="get">
+        <button type="submit">Edit Order</button>
+    </form>
+{% endblock %}
