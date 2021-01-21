@@ -141,8 +141,6 @@ class EmployeeUpdateView(generic.edit.UpdateView):
     template_name='ordersys/edit_employee.html'
     fields = ['name']
 
-    return HttpResponseRedirect(reverse('ordersys:order_details', args=[pk]))
-
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'
