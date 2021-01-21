@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=32)
@@ -71,4 +72,7 @@ class Employee(models.Model):
     employment_date = models.DateField()
     hourly_rate = models.DecimalField(max_digits=4, decimal_places=2)
     minimum_salary = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def get_absolute_url(self):
+        return reverse('ordersys:manage_employees')
 

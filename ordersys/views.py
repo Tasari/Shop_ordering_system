@@ -138,7 +138,7 @@ class EmployeeDetailsView(generic.DetailView):
 class EmployeeUpdateView(generic.edit.UpdateView):
     model = Employee
     template_name='ordersys/edit_employee.html'
-    fields = ['name']
+    fields = ['first_name', 'last_name']
 
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
