@@ -9,7 +9,7 @@
     </p>
     <p>Employed: {{employee.employment_date}}</p>
 
-    <form action="{% url 'ordersys:edit_employee' user.id%}" method="get">
+    <form action="{% url 'ordersys:edit_employee' employee.id%}" method="get">
         <button type="submit">Edit Employee</button>
     </form>
 {% endblock %}

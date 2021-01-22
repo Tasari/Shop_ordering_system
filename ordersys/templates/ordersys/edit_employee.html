@@ -4,6 +4,10 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Update">
+        <input type="submit" value="Update", name="Update">
+        <input type="submit" value="Promote", name="Promote">
+        <input type="submit" value="Demote", name="Demote">
+        <input type="submit" value="Fire", name="Fire">
+
     </form>
 {% endblock %}

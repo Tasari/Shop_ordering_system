@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.http import is_safe_url
 
 from .models import *
-from .forms import OrderCreationForm, LogInForm, EditForm
+from .forms import *
 
 class OrdersView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/'
@@ -62,7 +62,7 @@ class OrderUpdateView(generic.edit.UpdateView):
     fields = ['status']
     
     def post(self, request, pk):
-        order_data = EditForm(request.POST)
+        order_data = EditOrderForm(request.POST)
         order = get_object_or_404(Order, pk=pk)
         if order_data.is_valid():    
             status = order_data.cleaned_data['status']
@@ -138,8 +138,31 @@ class EmployeeDetailsView(generic.DetailView):
 class EmployeeUpdateView(generic.edit.UpdateView):
     model = Employee
     template_name='ordersys/edit_employee.html'
-    fields = ['first_name', 'last_name']
+    fields = ['first_name', 'last_name', 'position', 'hourly_rate']
 
+    def post(self, request, pk):
+        new_employee_data = EditEmployeeForm(request.POST)
+        employee = get_object_or_404(Employee, pk=pk)
+        if new_employee_data.is_valid():
+            first_name = new_employee_data.cleaned_data["first_name"]
+            last_name = new_employee_data.cleaned_data["last_name"]
+            position = new_employee_data.cleaned_data["position"]
+            hourly_rate = new_employee_data.cleaned_data["hourly_rate"]
+            if request.POST.get("Update"):
+                employee.first_name = first_name
+                employee.last_name = last_name
+                employee.position = position
+                employee.hourly_rate = hourly_rate
+                employee.minimum_salary = hourly_rate*160
+                employee.save()
+            elif request.POST.get("Fire"):
+                employee.delete()
+            elif request.POST.get("Promote"):
+                employee.promote()
+            elif request.POST.get("Demote"):
+                employee.demote()
+        return HttpResponseRedirect(reverse("ordersys:manage_employees"))
+                
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
     template_name = 'ordersys/create_order.html'
