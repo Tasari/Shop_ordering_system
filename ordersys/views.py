@@ -226,6 +226,55 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
         if to_delete != None:
             TempOrder.objects.get(product=to_delete).delete()
 
+class ManageStockView(LoginRequiredMixin, generic.ListView):
+    login_url = '/ordersys/login/' 
+    template_name = 'ordersys/manage_stock.html'
+    model = Ingredient
+    context_object_name = 'ingredients_list'
+
+    def get_queryset(self):
+        return Ingredient.objects.order_by('name')
+
+class IngredientDetailsView(generic.DetailView):
+    model = Ingredient
+    template_name = 'ordersys/ingredient_details.html'
+
+class IngredientRestockView(generic.DetailView):
+    model = Ingredient
+    template_name='ordersys/restock_ingredient.html'
+    def get(self, request, pk):
+        context = {
+            'form': RestockIngredientForm(),
+            'ingredient': get_object_or_404(Ingredient, pk=pk),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        new_ingredient_data = RestockIngredientForm(request.POST)
+        ingredient = get_object_or_404(Ingredient, pk=pk)
+        if new_ingredient_data.is_valid():
+            amount_to_restock = new_ingredient_data.cleaned_data["amount_to_restock"]
+            if request.POST.get("Restock"):
+                ingredient.amount_stored = ingredient.amount_stored + amount_to_restock
+                ingredient.save()
+        return HttpResponseRedirect(reverse("ordersys:manage_stock"))
+
+class IngredientUpdateView(generic.edit.UpdateView):
+    model = Ingredient
+    template_name='ordersys/edit_ingredient.html'
+    fields = ['name', 'amount_stored']
+
+    def post(self, request, pk):
+        new_ingredient_data = EditIngredientForm(request.POST)
+        ingredient = get_object_or_404(Ingredient, pk=pk)
+        if new_ingredient_data.is_valid():
+            name = new_ingredient_data.cleaned_data["name"]
+            amount_stored = new_ingredient_data.cleaned_data["amount_stored"]
+            if request.POST.get("Update"):
+                ingredient.name = name
+                ingredient.amount_stored = amount_stored
+                ingredient.save()
+        return HttpResponseRedirect(reverse("ordersys:manage_stock"))
 def start_preparing_order(request, pk):
     order = get_object_or_404(Order, id=pk)
     order.status = "Prepare"
