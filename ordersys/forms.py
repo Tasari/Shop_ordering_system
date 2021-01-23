@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import Product, TempOrder, ProductAmount, Order
+from .models import *
 
 class OrderCreationForm(forms.ModelForm):
     product = forms.ModelChoiceField(queryset=Product.objects.all(), empty_label=None, required=False)
@@ -18,8 +18,17 @@ class LogInForm(forms.Form):
         model = User
         fields = ('username', 'password')
 
-class EditForm(forms.Form):
+class EditOrderForm(forms.Form):
     status = forms.CharField()
     class Meta:
         model = Order
         fields = ('status')
+
+class EditEmployeeForm(forms.Form):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    position = forms.CharField()
+    hourly_rate = forms.DecimalField(max_digits=4, decimal_places=2)
+    class Meta:
+        model = Employee
+        fields = ("first_name", "last_name", "position", "hourly_rate")

@@ -4,7 +4,7 @@
     <h1>Order No. {{order.id}}</h1>
     <p>Order status: {{order.status}}</p>
     <p>Order items:{{order.print_ordered_items_products_amounts}}</p>
-    <form action="{% url 'ordersys:edit' order.id%}" method="get">
+    <form action="{% url 'ordersys:edit_order' order.id%}" method="get">
         <button type="submit">Edit Order</button>
     </form>
 {% endblock %}

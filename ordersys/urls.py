@@ -20,5 +20,8 @@ urlpatterns = [
     path('managers/', views.ManagerMenuView.as_view(), name='manager_tab'),
     path('manage_orders/', views.ManageOrdersView.as_view(), name='manage_orders'),
     path('manage_order/<int:pk>', views.OrderDetailsView.as_view(), name='order_details'),
-    path('manage_ordedr/<int:pk>/edit', views.OrderUpdateView.as_view(), name='edit' )
+    path('manage_order/<int:pk>/edit', views.OrderUpdateView.as_view(), name='edit_order' ),
+    path('manage_employees/', views.ManageEmployeesView.as_view(), name='manage_employees'),
+    path('manage_employee/<int:pk>', views.EmployeeDetailsView.as_view(), name='employee_details'),
+    path('manage_employee/<int:pk>/edit', views.EmployeeUpdateView.as_view(), name='edit_employee' ),
 ]
