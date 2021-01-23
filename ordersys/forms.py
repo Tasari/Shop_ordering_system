@@ -32,3 +32,17 @@ class EditEmployeeForm(forms.Form):
     class Meta:
         model = Employee
         fields = ("first_name", "last_name", "position", "hourly_rate")
+
+class EditIngredientForm(forms.Form):
+    name = forms.CharField()
+    amount_stored = forms.IntegerField()
+    class Meta:
+        model = Ingredient
+        fields = ("name", "amount_stored")
+
+
+class RestockIngredientForm(forms.Form):
+    amount_to_restock = forms.IntegerField()
+    class Meta:
+        model = Ingredient
+        fields = ('amount_to_restock')
