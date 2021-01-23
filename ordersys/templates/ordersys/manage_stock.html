@@ -1,0 +1,11 @@
+{% extends 'ordersys/base.html'%}
+
+{% block content %}
+    {% if ingredients_list %}
+        {% for ingredient in ingredients_list %}
+            <form action="{% url 'ordersys:ingredient_details' ingredient.id%}" method="get" class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary w-25 d-flex mt-2 mb-0 justify-content-center">{{ingredient.name}}: {{ingredient.amount_stored}}</button>
+            </form>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
