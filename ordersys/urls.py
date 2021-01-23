@@ -24,4 +24,8 @@ urlpatterns = [
     path('manage_employees/', views.ManageEmployeesView.as_view(), name='manage_employees'),
     path('manage_employee/<int:pk>', views.EmployeeDetailsView.as_view(), name='employee_details'),
     path('manage_employee/<int:pk>/edit', views.EmployeeUpdateView.as_view(), name='edit_employee' ),
+    path('manage_stock/', views.ManageStockView.as_view(), name="manage_stock"),
+    path('manage_ingredient/<int:pk>', views.IngredientDetailsView.as_view(), name='ingredient_details'),
+    path('manage_ingredient/<int:pk>/edit', views.IngredientUpdateView.as_view(), name='edit_ingredient' ),
+    path('manage_ingredient/<int:pk>/restock', views.IngredientRestockView.as_view(), name='restock_ingredient'),
 ]

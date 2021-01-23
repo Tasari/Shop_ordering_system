@@ -45,7 +45,7 @@ class Order(models.Model):
 
     
 class IngredientAmount(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     amount_of_ingredient = models.PositiveIntegerField()
 

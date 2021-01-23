@@ -1,0 +1,13 @@
+{% extends "ordersys/base.html" %}
+
+{% block content %}
+    <h1>Id:{{ingredient.id}} </h1>
+    <p>Name: {{ingredient.name}}</p> 
+    <p>In stock: {{ingredient.amount_stored}}</p>
+    <form action="{% url 'ordersys:edit_ingredient' ingredient.id%}" method="get">
+        <button type="submit">Edit Item Data</button>
+    </form>
+    <form action="{% url 'ordersys:restock_ingredient' ingredient.id %}" method="get">
+        <button type="submit">Restock Item</button>
+    </form>
+{% endblock %}

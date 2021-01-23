@@ -1,0 +1,12 @@
+{% extends 'ordersys/base.html'%}
+
+{% block content %}
+    <h1>Id:{{ingredient.id}} </h1>
+    <p>Name: {{ingredient.name}}</p> 
+    <p>In stock: {{ingredient.amount_stored}}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Restock", name="Restock">
+    </form>
+{% endblock %}
