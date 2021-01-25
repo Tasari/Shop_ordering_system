@@ -2,13 +2,22 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 
-from ordersys.models import Product
+from ordersys.models import Product, Employee
 
 class TestOrderCreationView(TestCase):
     def setUp(self):
         user = User.objects.create(username='test')
         user.set_password('12345')
         user.save()
+        employee = Employee.objects.create(
+            user=User.objects.last(), 
+            first_name='test',
+            last_name='test',
+            position='test',
+            employment_date = '2021-01-25',
+            hourly_rate=1.50,
+            minimum_salary = 15.50
+        )
         product = Product(name='Test')
         product2 = Product(name='Test2')
         product.save()
