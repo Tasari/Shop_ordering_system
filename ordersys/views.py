@@ -203,6 +203,7 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
         except:    
             if product != None and amount!= None and amount > 0:
                 temp_order = TempOrder(
+                    creator_id = self.request.user.id,
                     product=product, 
                     amount_of_product=amount
                     )
@@ -213,11 +214,11 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             order = Order()
             order.save()
             order = Order.objects.last()
-            for temp_item in TempOrder.objects.all():
+            for temp_item in TempOrder.objects.filter(creator_id=self.request.user.id):
                 product_amount = ProductAmount(
                     order=order, 
                     product=temp_item.product, 
-                    amount_of_product=temp_item.amount_of_product
+                    amount=temp_item.amount_of_product
                     )
                 product_amount.save()
             TempOrder.objects.all().delete()
