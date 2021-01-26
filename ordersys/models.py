@@ -22,17 +22,15 @@ class Product(models.Model):
                     * ingredient_amount.amount
         return cost
 
-
-    def is_product_avaible(self):
+    def is_available(self, amount):
         for ingredient_amount in IngredientAmount.objects.filter(product=self):
             stock_ingredient = Ingredient.objects.get(name=ingredient_amount.ingredient.name)
             if stock_ingredient.amount_stored\
-                - ingredient_amount.amount >= 0:
+                - ingredient_amount.amount*amount >= 0:
                 continue
             else:
                 return False
         return True
-
 
     def __str__(self):
         return self.name
@@ -110,5 +108,3 @@ class TempOrder(models.Model):
         for item in TempOrder.objects.filter(creator=request.user):
             cost += item.product.cost * amount_of_product
         return cost
-
-

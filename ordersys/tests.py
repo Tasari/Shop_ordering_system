@@ -2,8 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 
-from ordersys.models import Product, Employee
-
+from ordersys.models import *
 class TestOrderCreationView(TestCase):
     def setUp(self):
         user = User.objects.create(username='test')
@@ -105,3 +104,50 @@ class TestOrderCreationView(TestCase):
         response = self.c.get(reverse('ordersys:index'))
         self.assertContains(response, "{}: {}".format(product.name, amount))
         self.assertContains(response, "{}: {}".format(product2.name, amount))
+
+class TestProductObject(TestCase):
+    def setUp(self):
+        product = Product.objects.create(name="Test")
+        product.save()
+        ingredient1 = Ingredient.objects.create(name="TestIngre1", amount_stored=1, restock_cost=0.50)
+        ingredient1.save()
+        ingredient2 = Ingredient.objects.create(name="TestIngre2", amount_stored=1, restock_cost=1.50)
+        ingredient2.save()
+        ia1 = IngredientAmount.objects.create(product=product, ingredient=ingredient1, amount=1)
+        ia1.save()
+        ia2 = IngredientAmount.objects.create(product=product, ingredient=ingredient2, amount=1)
+        ia2.save()
+    
+    def test_creation_cost(self):
+        product = Product.objects.get(name="Test")
+        assert(product.creation_cost()==2)
+    
+    def test_product_available(self):
+        product = Product.objects.get(name="Test")
+        assert(product.is_available(1) == True)
+        assert(product.is_available(2) == False)
+
+class TestOrderObject(TestCase):
+    def setUp(self):
+        order = Order.objects.create()
+        order.save()
+        product = Product.objects.create(name="Test", cost=5.00)
+        product.save()
+        ingredient1 = Ingredient.objects.create(name="TestIngre1", amount_stored=1, restock_cost=0.50)
+        ingredient1.save()
+        ingredient2 = Ingredient.objects.create(name="TestIngre2", amount_stored=1, restock_cost=1.50)
+        ingredient2.save()
+        ia1 = IngredientAmount.objects.create(product=product, ingredient=ingredient1, amount=1)
+        ia1.save()
+        ia2 = IngredientAmount.objects.create(product=product, ingredient=ingredient2, amount=1)
+        ia2.save()
+        pa1 = ProductAmount(order=order, product=product, amount=2)
+        pa1.save()  
+
+    def test_total_cost(self):
+        order=Order.objects.last()
+        assert(order.print_total_cost() == 10)
+
+    def test_products_amount_print(self):
+        order = Order.objects.last()
+        assert(order.print_ordered_items_products_amounts() == "\nTest: 2")
