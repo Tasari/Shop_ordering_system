@@ -205,7 +205,7 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
                         product_on_temp.amount_of_product += amount
                     product_on_temp.save()
         except:    
-            if product != None and amount!= None and amount > 0:
+            if product != None and amount!= None and amount > 0 and maximum > 0:
                 if amount > maximum:
                     amount = maximum
                 temp_order = TempOrder(
