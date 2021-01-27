@@ -22,7 +22,7 @@ class Product(models.Model):
                     * ingredient_amount.amount
         return cost
 
-    def is_available(self, amount):
+    def is_available(self, amount=1):
         for ingredient_amount in IngredientAmount.objects.filter(product=self):
             stock_ingredient = Ingredient.objects.get(name=ingredient_amount.ingredient.name)
             if stock_ingredient.amount_stored\
@@ -31,6 +31,12 @@ class Product(models.Model):
             else:
                 return False
         return True
+
+    def prepare(self, amount=1):
+        for ingredient_amount in IngredientAmount.objects.filter(product=self):
+            stock_ingredient = Ingredient.objects.get(name=ingredient_amount.ingredient.name)
+            stock_ingredient.amount_stored = stock_ingredient.amount_stored - ingredient_amount.amount*amount
+            stock_ingredient.save()
 
     def __str__(self):
         return self.name

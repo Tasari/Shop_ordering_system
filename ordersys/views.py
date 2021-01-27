@@ -215,6 +215,7 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             order.save()
             order = Order.objects.last()
             for temp_item in TempOrder.objects.filter(creator_id=self.request.user.id):
+                temp_item.product.prepare(temp_item.amount_of_product)
                 product_amount = ProductAmount(
                     order=order, 
                     product=temp_item.product, 
