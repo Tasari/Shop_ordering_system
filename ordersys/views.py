@@ -194,14 +194,20 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
         return HttpResponseRedirect(reverse('ordersys:create'))
 
     def add_to_order(self, product, amount):
+        maximum = product.max_available()
         try:
             product_on_temp = TempOrder.objects.get(product=product)
             if product_on_temp:
                 if product_on_temp.amount_of_product + amount > 0:
-                    product_on_temp.amount_of_product += amount
+                    if product_on_temp.amount_of_product + amount > maximum:
+                        product_on_temp.amount_of_product = maximum
+                    else:
+                        product_on_temp.amount_of_product += amount
                     product_on_temp.save()
         except:    
             if product != None and amount!= None and amount > 0:
+                if amount > maximum:
+                    amount = maximum
                 temp_order = TempOrder(
                     creator_id = self.request.user.id,
                     product=product, 

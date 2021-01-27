@@ -32,6 +32,12 @@ class Product(models.Model):
                 return False
         return True
 
+    def max_available(self):
+        i = 0
+        while self.is_available(i):
+            i+=1
+        return i-1
+
     def prepare(self, amount=1):
         for ingredient_amount in IngredientAmount.objects.filter(product=self):
             stock_ingredient = Ingredient.objects.get(name=ingredient_amount.ingredient.name)
