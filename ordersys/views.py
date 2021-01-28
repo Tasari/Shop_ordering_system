@@ -188,7 +188,7 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             elif request.POST.get("Finish"):
                 self.finish_order()
             elif request.POST.get("Delete"):
-                TempOrder.objects.all().delete()
+                self.delete_order()
             elif request.POST.get("Delete Item"):
                 self.delete_from_order(deletion)
         return HttpResponseRedirect(reverse('ordersys:create'))
@@ -199,15 +199,16 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             product_on_temp = TempOrder.objects.get(product=product)
             if product_on_temp:
                 if product_on_temp.amount_of_product + amount > 0:
-                    if product_on_temp.amount_of_product + amount > maximum:
-                        product_on_temp.amount_of_product = maximum
-                    else:
-                        product_on_temp.amount_of_product += amount
+                    if amount > maximum:
+                        amount = maximum
+                    product_on_temp.amount_of_product += amount
+                    product_on_temp.product.prepare(amount)
                     product_on_temp.save()
         except:    
             if product != None and amount!= None and amount > 0 and maximum > 0:
                 if amount > maximum:
                     amount = maximum
+                product.prepare(amount)
                 temp_order = TempOrder(
                     creator_id = self.request.user.id,
                     product=product, 
@@ -221,7 +222,6 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             order.save()
             order = Order.objects.last()
             for temp_item in TempOrder.objects.filter(creator_id=self.request.user.id):
-                temp_item.product.prepare(temp_item.amount_of_product)
                 product_amount = ProductAmount(
                     order=order, 
                     product=temp_item.product, 
@@ -232,8 +232,12 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     
     def delete_from_order(self, to_delete):
         if to_delete != None:
-            TempOrder.objects.get(product=to_delete).delete()
-
+            to_delete_product = TempOrder.objects.get(product=to_delete)
+            to_delete_product.product.prepare(-to_delete_product.amount_of_product)
+            to_delete_product.delete()
+    def delete_order(self):
+        for to_delete in TempOrder.objects.filter(creator_id = self.request.user.id):
+            self.delete_from_order(to_delete.product)
 class ManageStockView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/' 
     template_name = 'ordersys/manage_stock.html'
