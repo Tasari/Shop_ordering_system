@@ -9,7 +9,7 @@ from django.utils.http import is_safe_url
 from ..forms import *
 
 class LogView(auth_views.LoginView):
-    template_name = 'ordersys/login.html'
+    template_name = 'ordersys/other/login.html'
     model = LogInForm
 
     fields = ['username', 'password']

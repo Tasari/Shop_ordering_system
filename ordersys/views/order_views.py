@@ -9,7 +9,7 @@ from ..models import *
 class OrdersView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/'
     model=Order
-    template_name = 'ordersys/orders.html'
+    template_name = 'ordersys/order/orders.html'
     context_object_name = 'orders_list'
     orderint = ['id']
     
@@ -40,7 +40,7 @@ class FailedOrdersView(OrdersView):
 class CustomersOrdersView(generic.ListView):
     login_url = '/ordersys/login/'
     model=Order    
-    template_name = 'ordersys/customers.html'
+    template_name = 'ordersys/order/customers.html'
     context_object_name = 'orders_list'
     orderint = ['id']
 
@@ -49,7 +49,7 @@ class CustomersOrdersView(generic.ListView):
 
 class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
-    template_name = 'ordersys/create_order.html'
+    template_name = 'ordersys/order/create_order.html'
     model = OrderCreationForm
 
     fields = ['product', 'amount']

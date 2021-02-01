@@ -8,7 +8,7 @@ from ..models import *
 
 class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
-    template_name = 'ordersys/manager_tab.html'
+    template_name = 'ordersys/manager/manager_tab.html'
     
     def get(self, request):
         return render(request, self.template_name)
@@ -25,7 +25,7 @@ class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
 
 class ManageOrdersView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/' 
-    template_name = 'ordersys/manage_orders.html'
+    template_name = 'ordersys/manager/manage_orders.html'
     model = Order
     context_object_name = 'orders_list'
 
@@ -34,7 +34,7 @@ class ManageOrdersView(LoginRequiredMixin, generic.ListView):
 
 class ManageEmployeesView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/' 
-    template_name = 'ordersys/manage_employees.html'
+    template_name = 'ordersys/manager/manage_employees.html'
     model = Employee
     context_object_name = 'employees_list'
 
@@ -43,11 +43,11 @@ class ManageEmployeesView(LoginRequiredMixin, generic.ListView):
 
 class EmployeeDetailsView(generic.DetailView):
     model = Employee
-    template_name = 'ordersys/employee_details.html'
+    template_name = 'ordersys/manager/employee_details.html'
 
 class EmployeeUpdateView(generic.edit.UpdateView):
     model = Employee
-    template_name='ordersys/edit_employee.html'
+    template_name='ordersys/manager/edit_employee.html'
     fields = ['first_name', 'last_name', 'position', 'hourly_rate']
 
     def post(self, request, pk):
@@ -76,11 +76,11 @@ class EmployeeUpdateView(generic.edit.UpdateView):
 
 class OrderDetailsView(generic.DetailView):
     model = Order
-    template_name = 'ordersys/order_details.html'
+    template_name = 'ordersys/manager/order_details.html'
 
 class OrderUpdateView(generic.edit.UpdateView):
     model = Order
-    template_name='ordersys/edit_order.html'
+    template_name='ordersys/manager/edit_order.html'
     fields = ['status']
     
     def post(self, request, pk):
@@ -94,7 +94,7 @@ class OrderUpdateView(generic.edit.UpdateView):
 
 class ManageStockView(LoginRequiredMixin, generic.ListView):
     login_url = '/ordersys/login/' 
-    template_name = 'ordersys/manage_stock.html'
+    template_name = 'ordersys/manager/manage_stock.html'
     model = Ingredient
     context_object_name = 'ingredients_list'
 
@@ -103,11 +103,11 @@ class ManageStockView(LoginRequiredMixin, generic.ListView):
 
 class IngredientDetailsView(generic.DetailView):
     model = Ingredient
-    template_name = 'ordersys/ingredient_details.html'
+    template_name = 'ordersys/manager/ingredient_details.html'
 
 class IngredientRestockView(generic.DetailView):
     model = Ingredient
-    template_name='ordersys/restock_ingredient.html'
+    template_name='ordersys/manager/restock_ingredient.html'
     def get(self, request, pk):
         context = {
             'form': RestockIngredientForm(),
@@ -127,7 +127,7 @@ class IngredientRestockView(generic.DetailView):
 
 class IngredientUpdateView(generic.edit.UpdateView):
     model = Ingredient
-    template_name='ordersys/edit_ingredient.html'
+    template_name='ordersys/manager/edit_ingredient.html'
     fields = ['name', 'amount_stored']
 
     def post(self, request, pk):
