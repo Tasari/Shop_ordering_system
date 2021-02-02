@@ -145,5 +145,29 @@ class IngredientUpdateView(generic.edit.UpdateView):
 class TodayView(LoginRequiredMixin, generic.dates.TodayArchiveView):
     queryset = Order.objects.all()
     date_field = 'date_ordered'
-    allow_future = True
+    allow_future = False
+    template_name = 'ordersys/manager/archive_page.html'
+
+class OrderDayArchiveView(LoginRequiredMixin, generic.dates.DayArchiveView):
+    queryset = Order.objects.all()
+    date_field = 'date_ordered'
+    allow_future = False
+    template_name = 'ordersys/manager/archive_page.html'
+
+class OrderWeekArchiveView(LoginRequiredMixin, generic.dates.WeekArchiveView):
+    queryset = Order.objects.all()
+    date_field = 'date_ordered'
+    allow_future = False
+    template_name = 'ordersys/manager/archive_page.html'
+
+class OrderMonthArchiveView(LoginRequiredMixin, generic.dates.MonthArchiveView):
+    queryset = Order.objects.all()
+    date_field = 'date_ordered'
+    allow_future = False
+    template_name = 'ordersys/manager/archive_page.html'
+    
+class OrderYearArchiveView(LoginRequiredMixin, generic.dates.YearArchiveView):
+    queryset = Order.objects.all()
+    date_field = 'date_ordered'
+    allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
