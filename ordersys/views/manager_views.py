@@ -146,4 +146,4 @@ class TodayView(LoginRequiredMixin, generic.dates.TodayArchiveView):
     queryset = Order.objects.all()
     date_field = 'date_ordered'
     allow_future = True
-    template_name = 'ordersys/manager/archive_day.html'
+    template_name = 'ordersys/manager/archive_page.html'
