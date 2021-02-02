@@ -13,9 +13,9 @@ class Ingredient(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=32)
     recipe = models.ManyToManyField(Ingredient, through='IngredientAmount')
-    cost = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    cost = models.DecimalField(max_digits=5, decimal_places=2, blank=True)
 
-    def creation_cost(self):
+    def total_cost(self):
         cost = 0
         for ingredient_amount in IngredientAmount.objects.filter(product=self):
             cost += ingredient_amount.ingredient.restock_cost\
@@ -44,6 +44,11 @@ class Product(models.Model):
             stock_ingredient.amount_stored = stock_ingredient.amount_stored - ingredient_amount.amount*amount
             stock_ingredient.save()
 
+    def save(self, *args, **kwargs):
+        if not self.cost:
+            self.cost = self.total_cost()
+        super(Product, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -51,9 +56,9 @@ class Order(models.Model):
     ordered_items = models.ManyToManyField(Product, through='ProductAmount')
     date_ordered = models.DateTimeField("Ordered", auto_now=True)
     status = models.CharField(max_length=12, default="Pending")
-    cost = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    cost = models.DecimalField(max_digits=8, decimal_places=2, blank=True)
 
-    def print_total_cost(self):
+    def total_cost(self):
         cost = 0
         for product_amount in ProductAmount.objects.filter(order=self):
             cost += product_amount.product.cost * product_amount.amount
@@ -74,7 +79,12 @@ class Order(models.Model):
             return str(self.id)
         else:
             return str(self.id)[-3:]
-        
+
+    def save(self, *args, **kwargs):
+        if not self.cost:
+            self.cost = self.total_cost()
+        super(Order, self).save(*args, **kwargs)
+
     def __repr__(self):
         return self.id
 
