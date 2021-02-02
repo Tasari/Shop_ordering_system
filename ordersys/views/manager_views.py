@@ -141,3 +141,9 @@ class IngredientUpdateView(generic.edit.UpdateView):
                 ingredient.amount_stored = amount_stored
                 ingredient.save()
         return HttpResponseRedirect(reverse("ordersys:manage_stock"))
+
+class TodayView(LoginRequiredMixin, generic.dates.TodayArchiveView):
+    queryset = Order.objects.all()
+    date_field = 'date_ordered'
+    allow_future = True
+    template_name = 'ordersys/manager/archive_day.html'
