@@ -77,6 +77,9 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
                 self.delete_from_order(deletion)
         return HttpResponseRedirect(reverse('ordersys:create'))
 
+    def get_employee_id(self):
+        return Employee.objects.get(user_id=self.request.user.id).id
+
     def add_to_order(self, product, amount):
         maximum = product.max_available()
         try:
@@ -93,8 +96,9 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
                 if amount > maximum:
                     amount = maximum
                 product.prepare(amount)
+                employee_id = Employee.objects.get()
                 temp_order = TempOrder(
-                    creator_id = self.request.user.id,
+                    creator_id = self.get_employee_id(),
                     product=product, 
                     amount_of_product=amount
                     )
@@ -105,7 +109,7 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
             order = Order()
             order.save()
             order = Order.objects.last()
-            for temp_item in TempOrder.objects.filter(creator_id=self.request.user.id):
+            for temp_item in TempOrder.objects.filter(creator_id=self.get_employee_id()):
                 product_amount = ProductAmount(
                     order=order, 
                     product=temp_item.product, 
@@ -116,11 +120,11 @@ class CreateOrderView(LoginRequiredMixin, generic.CreateView):
     
     def delete_from_order(self, to_delete):
         if to_delete != None:
-            to_delete_product = TempOrder.objects.get(product=to_delete)
+            to_delete_product = TempOrder.objects.get(product=to_delete, creator_id=self.get_employee_id())
             to_delete_product.product.prepare(-to_delete_product.amount_of_product)
             to_delete_product.delete()
     def delete_order(self):
-        for to_delete in TempOrder.objects.filter(creator_id = self.request.user.id):
+        for to_delete in TempOrder.objects.filter(creator_id=self.get_employee_id()):
             self.delete_from_order(to_delete.product)
 
 def start_preparing_order(request, pk):
