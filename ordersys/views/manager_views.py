@@ -157,6 +157,7 @@ class OrderDayArchiveView(LoginRequiredMixin, generic.dates.DayArchiveView):
 class OrderWeekArchiveView(LoginRequiredMixin, generic.dates.WeekArchiveView):
     queryset = Order.objects.all()
     date_field = 'date_ordered'
+    week_format = "%W"
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
@@ -165,9 +166,10 @@ class OrderMonthArchiveView(LoginRequiredMixin, generic.dates.MonthArchiveView):
     date_field = 'date_ordered'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
-    
+
 class OrderYearArchiveView(LoginRequiredMixin, generic.dates.YearArchiveView):
     queryset = Order.objects.all()
     date_field = 'date_ordered'
     allow_future = False
+    make_object_list = True
     template_name = 'ordersys/manager/archive_page.html'
