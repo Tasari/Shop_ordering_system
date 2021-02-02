@@ -28,4 +28,5 @@ urlpatterns = [
     path('manage_ingredient/<int:pk>', views.IngredientDetailsView.as_view(), name='ingredient_details'),
     path('manage_ingredient/<int:pk>/edit', views.IngredientUpdateView.as_view(), name='edit_ingredient' ),
     path('manage_ingredient/<int:pk>/restock', views.IngredientRestockView.as_view(), name='restock_ingredient'),
+    path('manage_today/', views.TodayView.as_view(), name="manage_today"),
 ]
