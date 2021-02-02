@@ -4,7 +4,7 @@
     <h1>{{day}} </h1>
     <ul>
         {% for order in object_list %}
-            <li class="bg-light">{{ order.id }}: {{order.print_ordered_items_products_amounts}}</li>
+            <li class="bg-light">{{ order.id }}: {{order.print_ordered_items_products_amounts}} (${{order.total_cost}})</li>
         {% endfor %}
     </ul>
 {% endblock %}
