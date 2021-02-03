@@ -16,6 +16,8 @@ class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
     def post(self, request):
         if request.POST.get("Daily"):
             return HttpResponseRedirect(reverse('ordersys:manage_today'))
+        if request.POST.get("Reports"):
+            return HttpResponseRedirect(reverse('ordersys:reports'))
         if request.POST.get("Employees"):
             return HttpResponseRedirect(reverse('ordersys:manage_employees'))
         if request.POST.get("Orders"):
