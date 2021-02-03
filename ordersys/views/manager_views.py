@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.http import HttpResponseRedirect
@@ -143,6 +145,25 @@ class IngredientUpdateView(generic.edit.UpdateView):
                 ingredient.amount_stored = amount_stored
                 ingredient.save()
         return HttpResponseRedirect(reverse("ordersys:manage_stock"))
+
+class ArchiveChoiceView(generic.edit.FormView):
+    template_name = 'ordersys/manager/reports.html'
+    form_class = DateForm
+
+    def post(self, request):
+        date = DateForm(request.POST)
+        if date.is_valid():
+            date=date.get_date()
+        if request.POST.get("Day"):
+            return HttpResponseRedirect(reverse("ordersys:archive_day", kwargs={'year':date.year, 'month':date.month, 'day':date.day}))
+        elif request.POST.get("Month"):
+            return HttpResponseRedirect(reverse("ordersys:archive_month", kwargs={'year':date.year, 'month':date.month}))
+        elif request.POST.get("Year"):
+            return HttpResponseRedirect(reverse("ordersys:archive_year", kwargs={'year':date.year}))
+        elif request.POST.get("Week"):
+            week = date.isocalendar()[1]
+            return HttpResponseRedirect(reverse("ordersys:archive_week", kwargs={'year':date.year, 'week':week}))
+
 
 class TodayView(LoginRequiredMixin, generic.dates.TodayArchiveView):
     queryset = Order.objects.all()
