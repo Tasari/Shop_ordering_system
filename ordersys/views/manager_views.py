@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 
 from ..forms import *
 from ..models import *
@@ -166,33 +167,61 @@ class ArchiveChoiceView(generic.edit.FormView):
 
 
 class TodayView(LoginRequiredMixin, generic.dates.TodayArchiveView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
 class OrderDayArchiveView(LoginRequiredMixin, generic.dates.DayArchiveView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        queryset = context['object_list']
+        sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
+        context['sum_cost'] = float(sum_total_cost)
+        return context
+
 class OrderWeekArchiveView(LoginRequiredMixin, generic.dates.WeekArchiveView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     week_format = "%W"
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        queryset = context['object_list']
+        sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
+        context['sum_cost'] = float(sum_total_cost)
+        return context
+
 class OrderMonthArchiveView(LoginRequiredMixin, generic.dates.MonthArchiveView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        queryset = context['object_list']
+        sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
+        context['sum_cost'] = float(sum_total_cost)
+        return context
+
 class OrderYearArchiveView(LoginRequiredMixin, generic.dates.YearArchiveView):
-    queryset = Order.objects.all()
+    queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
     make_object_list = True
     template_name = 'ordersys/manager/archive_page.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        queryset = context['object_list']
+        sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
+        context['sum_cost'] = float(sum_total_cost)
+        return context

@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{{day}} </h1>
+    <h2>{{ sum_cost }}</h2>
     <ul>
         {% for order in object_list %}
             <li class="bg-light">{{ order.id }}: {{order.print_ordered_items_products_amounts}} (${{order.total_cost}})</li>
