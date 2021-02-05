@@ -1,7 +1,7 @@
 {% extends 'ordersys/base.html'%}
 
 {% block content %}
-    <h1>{% firstof day week month year %} </h1>
+    <h1>{% firstof day week month year.year %} </h1>
     <h2>{{ sum_cost }}</h2>
     <ul>
         {% for order in object_list %}
