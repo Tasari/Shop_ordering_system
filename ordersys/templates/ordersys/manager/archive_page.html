@@ -1,6 +1,9 @@
 {% extends 'ordersys/base.html'%}
 
 {% block content %}
+    {% if not year and not day%}
+        First Day:
+    {% endif %}
     <h1>{% firstof day week month year.year %} </h1>
     <h2>{{ sum_cost }}</h2>
     <ul>
