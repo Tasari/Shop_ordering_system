@@ -182,7 +182,7 @@ class OrderDayArchiveView(LoginRequiredMixin, generic.dates.DayArchiveView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         queryset = context['object_list']
         sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
-        context['sum_cost'] = float(sum_total_cost)
+        context['sum_cost'] = "{:.2f}".format(float(sum_total_cost))
         return context
 
 class OrderWeekArchiveView(LoginRequiredMixin, generic.dates.WeekArchiveView):
@@ -196,7 +196,7 @@ class OrderWeekArchiveView(LoginRequiredMixin, generic.dates.WeekArchiveView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         queryset = context['object_list']
         sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
-        context['sum_cost'] = float(sum_total_cost)
+        context['sum_cost'] = "{:.2f}".format(float(sum_total_cost))
         return context
 
 class OrderMonthArchiveView(LoginRequiredMixin, generic.dates.MonthArchiveView):
@@ -209,7 +209,7 @@ class OrderMonthArchiveView(LoginRequiredMixin, generic.dates.MonthArchiveView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         queryset = context['object_list']
         sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
-        context['sum_cost'] = float(sum_total_cost)
+        context['sum_cost'] = "{:.2f}".format(float(sum_total_cost))
         return context
 
 class OrderYearArchiveView(LoginRequiredMixin, generic.dates.YearArchiveView):
@@ -223,5 +223,5 @@ class OrderYearArchiveView(LoginRequiredMixin, generic.dates.YearArchiveView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         queryset = context['object_list']
         sum_total_cost = queryset.aggregate(Sum('cost'))['cost__sum']
-        context['sum_cost'] = float(sum_total_cost)
+        context['sum_cost'] = "{:.2f}".format(float(sum_total_cost))
         return context
