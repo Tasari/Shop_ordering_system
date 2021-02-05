@@ -1,0 +1,16 @@
+{% extends 'ordersys/base.html'%}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form }} (yyyy-mm-dd)
+    <br>
+    <input type="submit" name="Day" value="Print Day Report">
+    <br>
+    <input type="submit" name="Week" value="Print Week Report">
+    <br>
+    <input type="submit" name="Month" value="Print Monthly Report">
+    <br>
+    <input type="submit" name="Year" value="Print Annual Report">
+    <br>
+</form> 
+{% endblock %}

@@ -28,4 +28,10 @@ urlpatterns = [
     path('manage_ingredient/<int:pk>', views.IngredientDetailsView.as_view(), name='ingredient_details'),
     path('manage_ingredient/<int:pk>/edit', views.IngredientUpdateView.as_view(), name='edit_ingredient' ),
     path('manage_ingredient/<int:pk>/restock', views.IngredientRestockView.as_view(), name='restock_ingredient'),
+    path('manage_today/', views.TodayView.as_view(), name="manage_today"),
+    path('manage_archive/', views.ArchiveChoiceView.as_view(), name='reports'),
+    path('<int:year>/<int:month>/<int:day>/', views.OrderDayArchiveView.as_view(month_format='%m'), name="archive_day"),
+    path('week/<int:year>/<int:week>/', views.OrderWeekArchiveView.as_view(), name="archive_week"),
+    path('<int:year>/<int:month>/', views.OrderMonthArchiveView.as_view(month_format='%m'), name="archive_month"),
+    path('<int:year>/', views.OrderYearArchiveView.as_view(), name="archive_year"),
 ]

@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.contrib.auth.models import User
 
@@ -46,3 +48,9 @@ class RestockIngredientForm(forms.Form):
     class Meta:
         model = Ingredient
         fields = ('amount_to_restock')
+
+class DateForm(forms.Form):
+    date = forms.DateField(initial=datetime.date.today)
+    
+    def get_date(self):
+        return self.cleaned_data['date']
