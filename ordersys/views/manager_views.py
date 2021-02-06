@@ -128,6 +128,11 @@ class IngredientRestockView(generic.DetailView):
             if request.POST.get("Restock"):
                 ingredient.amount_stored = ingredient.amount_stored + amount_to_restock
                 ingredient.save()
+                transaction = Transaction.objects.create(
+                    creator=Employee.objects.get(user_id=self.request.user.id), 
+                    category='Restock',
+                    income=-ingredient.restock_cost*amount_to_restock)
+                transaction.save()
         return HttpResponseRedirect(reverse("ordersys:manage_stock"))
 
 class IngredientUpdateView(generic.edit.UpdateView):
