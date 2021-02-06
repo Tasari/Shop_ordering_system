@@ -17,10 +17,14 @@ class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
         return render(request, self.template_name)
 
     def post(self, request):
-        if request.POST.get("Daily"):
-            return HttpResponseRedirect(reverse('ordersys:manage_today'))
+        if request.POST.get("DailyReport"):
+            return HttpResponseRedirect(reverse('ordersys:manage_today_reports'))
         if request.POST.get("Reports"):
             return HttpResponseRedirect(reverse('ordersys:reports'))
+        if request.POST.get("DailyArchive"):
+            return HttpResponseRedirect(reverse('ordersys:manage_today_orders'))
+        if request.POST.get("Archives"):
+            return HttpResponseRedirect(reverse('ordersys:archives'))
         if request.POST.get("Employees"):
             return HttpResponseRedirect(reverse('ordersys:manage_employees'))
         if request.POST.get("Orders"):
@@ -171,7 +175,7 @@ class ArchiveChoiceView(generic.edit.FormView):
             return HttpResponseRedirect(reverse("ordersys:report_week", kwargs={'year':date.year, 'week':week}))
 
 class ArchiveChoiceView(generic.edit.FormView):
-    template_name = 'ordersys/manager/reports.html'
+    template_name = 'ordersys/manager/archives.html'
     form_class = DateForm
 
     def post(self, request):
@@ -230,14 +234,14 @@ class TransactionTodayView(CostSumMixin, LoginRequiredMixin, generic.dates.Today
     queryset = Transaction.objects.all()
     date_field = 'date'
     allow_future = False
-    cost_field = 'cost'
+    cost_field = 'income'
     template_name = 'ordersys/manager/report_page.html'
 
 class TransactionDayArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.DayArchiveView):
     queryset = Transaction.objects.all()
     date_field = 'date'
     allow_future = False
-    cost_field = 'cost'
+    cost_field = 'income'
     template_name = 'ordersys/manager/report_page.html'
 
 
@@ -245,21 +249,21 @@ class TransactionWeekArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates
     queryset = Transaction.objects.all()
     date_field = 'date'
     week_format = "%W"
-    cost_field = 'cost'
+    cost_field = 'income'
     allow_future = False
     template_name = 'ordersys/manager/report_page.html'
 
 class TransactionMonthArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.MonthArchiveView):
     queryset = Transaction.objects.all()
     date_field = 'date'
-    cost_field = 'cost'
+    cost_field = 'income'
     allow_future = False
     template_name = 'ordersys/manager/report_page.html'
 
 class TransactionYearArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.YearArchiveView):
     queryset = Transaction.objects.all()
     date_field = 'date'
-    cost_field = 'cost'
+    cost_field = 'income'
     allow_future = False
     make_object_list = True
     template_name = 'ordersys/manager/report_page.html'
