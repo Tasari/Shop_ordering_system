@@ -192,6 +192,23 @@ class ArchiveChoiceView(generic.edit.FormView):
             week = date.isocalendar()[1]
             return HttpResponseRedirect(reverse("ordersys:archive_week", kwargs={'year':date.year, 'week':week}))
 
+class TransactionChoiceView(generic.edit.FormView):
+    template_name = 'ordersys/manager/reports.html'
+    form_class = DateForm
+
+    def post(self, request):
+        date = DateForm(request.POST)
+        if date.is_valid():
+            date=date.get_date()
+        if request.POST.get("Day"):
+            return HttpResponseRedirect(reverse("ordersys:report_day", kwargs={'year':date.year, 'month':date.month, 'day':date.day}))
+        elif request.POST.get("Month"):
+            return HttpResponseRedirect(reverse("ordersys:report_month", kwargs={'year':date.year, 'month':date.month}))
+        elif request.POST.get("Year"):
+            return HttpResponseRedirect(reverse("ordersys:report_year", kwargs={'year':date.year}))
+        elif request.POST.get("Week"):
+            week = date.isocalendar()[1]
+            return HttpResponseRedirect(reverse("ordersys:report_week", kwargs={'year':date.year, 'week':week}))
 
 class OrderTodayView(CostSumMixin, LoginRequiredMixin, generic.dates.TodayArchiveView):
     queryset = Order.objects.filter(status='Done')
