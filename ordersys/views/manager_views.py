@@ -153,6 +153,24 @@ class IngredientUpdateView(generic.edit.UpdateView):
         return HttpResponseRedirect(reverse("ordersys:manage_stock"))
 
 class ArchiveChoiceView(generic.edit.FormView):
+    template_name = 'ordersys/manager/archives.html'
+    form_class = DateForm
+
+    def post(self, request):
+        date = DateForm(request.POST)
+        if date.is_valid():
+            date=date.get_date()
+        if request.POST.get("Day"):
+            return HttpResponseRedirect(reverse("ordersys:report_day", kwargs={'year':date.year, 'month':date.month, 'day':date.day}))
+        elif request.POST.get("Month"):
+            return HttpResponseRedirect(reverse("ordersys:report_month", kwargs={'year':date.year, 'month':date.month}))
+        elif request.POST.get("Year"):
+            return HttpResponseRedirect(reverse("ordersys:report_year", kwargs={'year':date.year}))
+        elif request.POST.get("Week"):
+            week = date.isocalendar()[1]
+            return HttpResponseRedirect(reverse("ordersys:report_week", kwargs={'year':date.year, 'week':week}))
+
+class ArchiveChoiceView(generic.edit.FormView):
     template_name = 'ordersys/manager/reports.html'
     form_class = DateForm
 
@@ -171,7 +189,7 @@ class ArchiveChoiceView(generic.edit.FormView):
             return HttpResponseRedirect(reverse("ordersys:archive_week", kwargs={'year':date.year, 'week':week}))
 
 
-class TodayView(CostSumMixin, LoginRequiredMixin, generic.dates.TodayArchiveView):
+class OrderTodayView(CostSumMixin, LoginRequiredMixin, generic.dates.TodayArchiveView):
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
@@ -184,7 +202,6 @@ class OrderDayArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.DayArc
     allow_future = False
     cost_field = 'cost'
     template_name = 'ordersys/manager/archive_page.html'
-
 
 class OrderWeekArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.WeekArchiveView):
     queryset = Order.objects.filter(status='Done')
@@ -208,3 +225,41 @@ class OrderYearArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.YearA
     allow_future = False
     make_object_list = True
     template_name = 'ordersys/manager/archive_page.html'
+
+class TransactionTodayView(CostSumMixin, LoginRequiredMixin, generic.dates.TodayArchiveView):
+    queryset = Transaction.objects.all()
+    date_field = 'date'
+    allow_future = False
+    cost_field = 'cost'
+    template_name = 'ordersys/manager/report_page.html'
+
+class TransactionDayArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.DayArchiveView):
+    queryset = Transaction.objects.all()
+    date_field = 'date'
+    allow_future = False
+    cost_field = 'cost'
+    template_name = 'ordersys/manager/report_page.html'
+
+
+class TransactionWeekArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.WeekArchiveView):
+    queryset = Transaction.objects.all()
+    date_field = 'date'
+    week_format = "%W"
+    cost_field = 'cost'
+    allow_future = False
+    template_name = 'ordersys/manager/report_page.html'
+
+class TransactionMonthArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.MonthArchiveView):
+    queryset = Transaction.objects.all()
+    date_field = 'date'
+    cost_field = 'cost'
+    allow_future = False
+    template_name = 'ordersys/manager/report_page.html'
+
+class TransactionYearArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.YearArchiveView):
+    queryset = Transaction.objects.all()
+    date_field = 'date'
+    cost_field = 'cost'
+    allow_future = False
+    make_object_list = True
+    template_name = 'ordersys/manager/report_page.html'
