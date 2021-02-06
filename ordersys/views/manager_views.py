@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from ..forms import *
 from ..models import *
-from ..utils import CostSumMixin
+from ..mixins import CostSumMixin
 
 class ManagerMenuView(LoginRequiredMixin, generic.CreateView):
     login_url = '/ordersys/login/'
