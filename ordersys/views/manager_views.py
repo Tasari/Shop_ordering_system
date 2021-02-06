@@ -175,12 +175,14 @@ class TodayView(CostSumMixin, LoginRequiredMixin, generic.dates.TodayArchiveView
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
+    cost_field = 'cost'
     template_name = 'ordersys/manager/archive_page.html'
 
 class OrderDayArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.DayArchiveView):
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     allow_future = False
+    cost_field = 'cost'
     template_name = 'ordersys/manager/archive_page.html'
 
 
@@ -188,18 +190,21 @@ class OrderWeekArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.WeekA
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
     week_format = "%W"
+    cost_field = 'cost'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
 class OrderMonthArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.MonthArchiveView):
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
+    cost_field = 'cost'
     allow_future = False
     template_name = 'ordersys/manager/archive_page.html'
 
 class OrderYearArchiveView(CostSumMixin, LoginRequiredMixin, generic.dates.YearArchiveView):
     queryset = Order.objects.filter(status='Done')
     date_field = 'date_ordered'
+    cost_field = 'cost'
     allow_future = False
     make_object_list = True
     template_name = 'ordersys/manager/archive_page.html'
