@@ -2,9 +2,13 @@
 {% block content %}
 <form method="POST">
     {% csrf_token %}
-    <input type="submit" name="Daily" value="Print Daily Report">
+    <input type="submit" name="DailyReport" value="Print Daily Report">
     <br>
     <input type="submit" name="Reports" value="Print Other Reports">
+    <br>
+    <input type="submit" name="DailyArchive" value="Print Daily Archive">
+    <br>
+    <input type="submit" name="Archives" value="Print Other Archives">
     <br>
     <input type="submit" name="Employees" value="Manage Employees">
     <br>

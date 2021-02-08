@@ -7,8 +7,8 @@
     <h1>{% firstof day week month year.year %} </h1>
     <h2>Earned: ${{ sum_cost }}</h2>
     <ul>
-        {% for order in object_list %}
-            <li>{{ order.id }}: {{order.print_ordered_items_products_amounts}} (${{order.total_cost}})</li>
+        {% for transaction in object_list %}
+            <li>ID: {{ transaction.id }}| Creator: {{transaction.creator.first_name}} {{transaction.creator.last_name}} | {{transaction.category}} | ${{transaction.income}} | Date: {{transaction.date}} </li>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -142,5 +142,10 @@ def finish_preparing_order(request, pk):
 def collected_order(request, pk):
     order = get_object_or_404(Order, id=pk)
     order.status = "Done"
+    transaction = Transaction.objects.create(
+        creator=Employee.objects.get(user_id=request.user.id), 
+        category='Order',
+        income=order.total_cost())
+    transaction.save()
     order.save()
     return HttpResponseRedirect(reverse('ordersys:collect'))

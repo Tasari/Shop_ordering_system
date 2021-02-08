@@ -130,3 +130,9 @@ class TempOrder(models.Model):
         for item in TempOrder.objects.filter(creator=request.user):
             cost += item.product.cost * amount_of_product
         return cost
+
+class Transaction(models.Model):
+    creator = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    category = models.CharField(max_length=32)
+    income = models.DecimalField(max_digits=8, decimal_places=2)
+    date = models.DateTimeField(auto_now=True)
