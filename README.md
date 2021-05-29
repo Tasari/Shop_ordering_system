@@ -1,3 +1,6 @@
+#ON HOLD DUE TO WORK ON MY BACHELOR'S DEGREE PROJECT
+
+
 # Shop ordering system
 Shop management system created with Django.
 
